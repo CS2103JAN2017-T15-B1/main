@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import t15b1.taskcrusher.commons.util.StringUtil;
+import seedu.address.commons.util.StringUtil;
 
 public class StringUtilTest {
 

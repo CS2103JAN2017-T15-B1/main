@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.junit.Test;
 
-import t15b1.taskcrusher.commons.util.FileUtil;
-import t15b1.taskcrusher.commons.util.JsonUtil;
+import seedu.address.commons.util.FileUtil;
+import seedu.address.commons.util.JsonUtil;
 import t15b1.taskcrusher.testutil.SerializableTestClass;
 import t15b1.taskcrusher.testutil.TestUtil;
 

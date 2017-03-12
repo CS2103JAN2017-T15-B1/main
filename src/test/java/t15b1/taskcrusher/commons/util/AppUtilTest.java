@@ -6,7 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import t15b1.taskcrusher.commons.util.AppUtil;
+import seedu.address.commons.util.AppUtil;
 
 public class AppUtilTest {
 

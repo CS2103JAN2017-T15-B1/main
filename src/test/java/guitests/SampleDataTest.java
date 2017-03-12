@@ -4,9 +4,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import t15b1.taskcrusher.model.UserInbox;
-import t15b1.taskcrusher.model.task.Task;
-import t15b1.taskcrusher.model.util.SampleDataUtil;
+import seedu.address.model.UserInbox;
+import seedu.address.model.task.Task;
+import seedu.address.model.util.SampleDataUtil;
 import t15b1.taskcrusher.testutil.TestUtil;
 
 public class SampleDataTest extends AddressBookGuiTest {

@@ -12,7 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import t15b1.taskcrusher.commons.util.CollectionUtil;
+import seedu.address.commons.util.CollectionUtil;
 
 public class CollectionUtilTest {
     @Rule

@@ -1,12 +1,12 @@
 package t15b1.taskcrusher.testutil;
 
-import t15b1.taskcrusher.model.shared.Description;
-import t15b1.taskcrusher.model.shared.Name;
-import t15b1.taskcrusher.model.tag.UniqueTagList;
-import t15b1.taskcrusher.model.task.Deadline;
-import t15b1.taskcrusher.model.task.Email;
-import t15b1.taskcrusher.model.task.Priority;
-import t15b1.taskcrusher.model.task.ReadOnlyTask;
+import seedu.address.model.shared.Description;
+import seedu.address.model.shared.Name;
+import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.task.Deadline;
+import seedu.address.model.task.Email;
+import seedu.address.model.task.Priority;
+import seedu.address.model.task.ReadOnlyTask;
 
 /**
  * A mutable person object. For testing only.

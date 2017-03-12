@@ -25,20 +25,20 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import junit.framework.AssertionFailedError;
+import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.commons.util.FileUtil;
+import seedu.address.commons.util.XmlUtil;
+import seedu.address.model.UserInbox;
+import seedu.address.model.shared.Description;
+import seedu.address.model.shared.Name;
+import seedu.address.model.tag.Tag;
+import seedu.address.model.tag.UniqueTagList;
+import seedu.address.model.task.Email;
+import seedu.address.model.task.Priority;
+import seedu.address.model.task.ReadOnlyTask;
+import seedu.address.model.task.Task;
+import seedu.address.storage.XmlSerializableUserInbox;
 import t15b1.taskcrusher.TestApp;
-import t15b1.taskcrusher.commons.exceptions.IllegalValueException;
-import t15b1.taskcrusher.commons.util.FileUtil;
-import t15b1.taskcrusher.commons.util.XmlUtil;
-import t15b1.taskcrusher.model.UserInbox;
-import t15b1.taskcrusher.model.shared.Description;
-import t15b1.taskcrusher.model.shared.Name;
-import t15b1.taskcrusher.model.tag.Tag;
-import t15b1.taskcrusher.model.tag.UniqueTagList;
-import t15b1.taskcrusher.model.task.Email;
-import t15b1.taskcrusher.model.task.Priority;
-import t15b1.taskcrusher.model.task.ReadOnlyTask;
-import t15b1.taskcrusher.model.task.Task;
-import t15b1.taskcrusher.storage.XmlSerializableUserInbox;
 
 /**
  * A utility class for test cases.

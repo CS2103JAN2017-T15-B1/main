@@ -4,12 +4,12 @@ import java.util.function.Supplier;
 
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import t15b1.taskcrusher.MainApp;
-import t15b1.taskcrusher.commons.core.Config;
-import t15b1.taskcrusher.commons.core.GuiSettings;
-import t15b1.taskcrusher.model.ReadOnlyUserInbox;
-import t15b1.taskcrusher.model.UserPrefs;
-import t15b1.taskcrusher.storage.XmlSerializableUserInbox;
+import seedu.address.MainApp;
+import seedu.address.commons.core.Config;
+import seedu.address.commons.core.GuiSettings;
+import seedu.address.model.ReadOnlyUserInbox;
+import seedu.address.model.UserPrefs;
+import seedu.address.storage.XmlSerializableUserInbox;
 import t15b1.taskcrusher.testutil.TestUtil;
 
 /**

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import t15b1.taskcrusher.model.shared.Description;
+import seedu.address.model.shared.Description;
 
 public class AddressTest {
 

@@ -5,8 +5,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import guitests.guihandles.PersonCardHandle;
-import t15b1.taskcrusher.commons.core.Messages;
-import t15b1.taskcrusher.logic.commands.AddCommand;
+import seedu.address.commons.core.Messages;
+import seedu.address.logic.commands.AddCommand;
 import t15b1.taskcrusher.testutil.TestPerson;
 import t15b1.taskcrusher.testutil.TestUtil;
 

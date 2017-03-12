@@ -8,7 +8,7 @@ import java.net.URL;
 
 import org.junit.Test;
 
-import t15b1.taskcrusher.commons.util.UrlUtil;
+import seedu.address.commons.util.UrlUtil;
 
 /**
  * Tests the UrlUtil methods.

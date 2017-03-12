@@ -1,9 +1,9 @@
 package t15b1.taskcrusher.testutil;
 
-import t15b1.taskcrusher.commons.exceptions.IllegalValueException;
-import t15b1.taskcrusher.model.UserInbox;
-import t15b1.taskcrusher.model.task.Task;
-import t15b1.taskcrusher.model.task.UniqueTaskList;
+import seedu.address.commons.exceptions.IllegalValueException;
+import seedu.address.model.UserInbox;
+import seedu.address.model.task.Task;
+import seedu.address.model.task.UniqueTaskList;
 
 /**
  *

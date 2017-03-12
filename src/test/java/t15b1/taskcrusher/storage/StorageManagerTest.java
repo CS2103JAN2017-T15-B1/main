@@ -12,15 +12,15 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import t15b1.taskcrusher.commons.events.model.AddressBookChangedEvent;
-import t15b1.taskcrusher.commons.events.storage.DataSavingExceptionEvent;
-import t15b1.taskcrusher.model.ReadOnlyUserInbox;
-import t15b1.taskcrusher.model.UserInbox;
-import t15b1.taskcrusher.model.UserPrefs;
-import t15b1.taskcrusher.storage.JsonUserPrefsStorage;
-import t15b1.taskcrusher.storage.Storage;
-import t15b1.taskcrusher.storage.StorageManager;
-import t15b1.taskcrusher.storage.XmlUserInboxStorage;
+import seedu.address.commons.events.model.AddressBookChangedEvent;
+import seedu.address.commons.events.storage.DataSavingExceptionEvent;
+import seedu.address.model.ReadOnlyUserInbox;
+import seedu.address.model.UserInbox;
+import seedu.address.model.UserPrefs;
+import seedu.address.storage.JsonUserPrefsStorage;
+import seedu.address.storage.Storage;
+import seedu.address.storage.StorageManager;
+import seedu.address.storage.XmlUserInboxStorage;
 import t15b1.taskcrusher.testutil.EventsCollector;
 import t15b1.taskcrusher.testutil.TypicalTestPersons;
 

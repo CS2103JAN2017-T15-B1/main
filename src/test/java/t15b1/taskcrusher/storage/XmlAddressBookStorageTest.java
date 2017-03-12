@@ -11,12 +11,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 
-import t15b1.taskcrusher.commons.exceptions.DataConversionException;
-import t15b1.taskcrusher.commons.util.FileUtil;
-import t15b1.taskcrusher.model.ReadOnlyUserInbox;
-import t15b1.taskcrusher.model.UserInbox;
-import t15b1.taskcrusher.model.task.Task;
-import t15b1.taskcrusher.storage.XmlUserInboxStorage;
+import seedu.address.commons.exceptions.DataConversionException;
+import seedu.address.commons.util.FileUtil;
+import seedu.address.model.ReadOnlyUserInbox;
+import seedu.address.model.UserInbox;
+import seedu.address.model.task.Task;
+import seedu.address.storage.XmlUserInboxStorage;
 import t15b1.taskcrusher.testutil.TypicalTestPersons;
 
 public class XmlAddressBookStorageTest {

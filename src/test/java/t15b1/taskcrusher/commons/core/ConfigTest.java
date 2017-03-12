@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import t15b1.taskcrusher.commons.core.Config;
+import seedu.address.commons.core.Config;
 
 public class ConfigTest {
     @Rule

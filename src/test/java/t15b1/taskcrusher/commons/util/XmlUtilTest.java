@@ -11,10 +11,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import t15b1.taskcrusher.commons.util.FileUtil;
-import t15b1.taskcrusher.commons.util.XmlUtil;
-import t15b1.taskcrusher.model.UserInbox;
-import t15b1.taskcrusher.storage.XmlSerializableUserInbox;
+import seedu.address.commons.util.FileUtil;
+import seedu.address.commons.util.XmlUtil;
+import seedu.address.model.UserInbox;
+import seedu.address.storage.XmlSerializableUserInbox;
 import t15b1.taskcrusher.testutil.AddressBookBuilder;
 import t15b1.taskcrusher.testutil.TestUtil;
 

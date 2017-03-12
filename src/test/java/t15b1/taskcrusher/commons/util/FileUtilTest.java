@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import t15b1.taskcrusher.commons.util.FileUtil;
+import seedu.address.commons.util.FileUtil;
 
 public class FileUtilTest {
 

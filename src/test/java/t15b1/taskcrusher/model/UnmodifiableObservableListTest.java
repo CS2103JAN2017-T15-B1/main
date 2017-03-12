@@ -15,7 +15,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import javafx.collections.FXCollections;
-import t15b1.taskcrusher.commons.core.UnmodifiableObservableList;
+import seedu.address.commons.core.UnmodifiableObservableList;
 
 public class UnmodifiableObservableListTest {
 

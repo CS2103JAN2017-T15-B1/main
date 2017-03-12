@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import t15b1.taskcrusher.model.task.Email;
+import seedu.address.model.task.Email;
 
 public class EmailTest {
 

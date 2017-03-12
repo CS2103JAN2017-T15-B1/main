@@ -14,11 +14,11 @@ import org.junit.rules.ExpectedException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import t15b1.taskcrusher.model.ReadOnlyUserInbox;
-import t15b1.taskcrusher.model.UserInbox;
-import t15b1.taskcrusher.model.tag.Tag;
-import t15b1.taskcrusher.model.task.ReadOnlyTask;
-import t15b1.taskcrusher.model.task.Task;
+import seedu.address.model.ReadOnlyUserInbox;
+import seedu.address.model.UserInbox;
+import seedu.address.model.tag.Tag;
+import seedu.address.model.task.ReadOnlyTask;
+import seedu.address.model.task.Task;
 import t15b1.taskcrusher.testutil.TypicalTestPersons;
 
 public class AddressBookTest {

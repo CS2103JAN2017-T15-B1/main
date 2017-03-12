@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import t15b1.taskcrusher.model.task.Priority;
+import seedu.address.model.task.Priority;
 
 public class PhoneTest {
 

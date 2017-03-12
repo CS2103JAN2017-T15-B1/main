@@ -1,18 +1,18 @@
 package guitests;
 
 import static org.junit.Assert.assertTrue;
-import static t15b1.taskcrusher.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
+import static seedu.address.commons.core.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 
 import org.junit.Test;
 
 import guitests.guihandles.PersonCardHandle;
-import t15b1.taskcrusher.commons.core.Messages;
-import t15b1.taskcrusher.logic.commands.EditCommand;
-import t15b1.taskcrusher.model.shared.Description;
-import t15b1.taskcrusher.model.shared.Name;
-import t15b1.taskcrusher.model.tag.Tag;
-import t15b1.taskcrusher.model.task.Email;
-import t15b1.taskcrusher.model.task.Priority;
+import seedu.address.commons.core.Messages;
+import seedu.address.logic.commands.EditCommand;
+import seedu.address.model.shared.Description;
+import seedu.address.model.shared.Name;
+import seedu.address.model.tag.Tag;
+import seedu.address.model.task.Email;
+import seedu.address.model.task.Priority;
 import t15b1.taskcrusher.testutil.PersonBuilder;
 import t15b1.taskcrusher.testutil.TestPerson;
 
