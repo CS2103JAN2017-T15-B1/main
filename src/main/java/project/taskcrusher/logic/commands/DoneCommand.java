@@ -22,8 +22,7 @@ public class DoneCommand extends Command {
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
 
-  public static final String MESSAGE_DONE_TASK_SUCCESS = "Complete Task: %1$s";
-    
+  public static final String MESSAGE_DONE_TASK_SUCCESS = "Complete Task: %1$s";    
   public static final String MESSAGE_DUPLICATE_TASK = "This task exists in the active list.";
 
   public final int targetIndex;
@@ -33,7 +32,6 @@ public class DoneCommand extends Command {
   }
 
   /*    List<ReadOnlyTask> lastShownList = model.getFilteredTaskList();
-
     if (filteredTaskListIndex >= lastShownList.size()) {
         throw new CommandException(Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
     }

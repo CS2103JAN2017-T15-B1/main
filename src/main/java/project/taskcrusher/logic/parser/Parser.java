@@ -72,11 +72,9 @@ public class Parser {
             return new ExitCommand();
 
         case HelpCommand.COMMAND_WORD:
-            return new HelpCommand();
-            
+            return new HelpCommand();    
         case DoneCommand.COMMAND_WORD:
        	 return new DoneCommandParser().parse(arguments);
-            
         default:
             return new IncorrectCommand(MESSAGE_UNKNOWN_COMMAND);
         }

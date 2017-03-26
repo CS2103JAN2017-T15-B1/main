@@ -51,7 +51,6 @@ public class DoneCommandParser {
     if (!editTaskDescriptor.isAnyFieldEdited()) {
       return new IncorrectCommand(EditCommand.MESSAGE_NOT_EDITED);
     }
-
     return new EditCommand(index.get(), editTaskDescriptor);   
   }
 
