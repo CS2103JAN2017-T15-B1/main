@@ -10,6 +10,7 @@ import project.taskcrusher.logic.commands.AddCommand;
 import project.taskcrusher.logic.commands.ClearCommand;
 import project.taskcrusher.logic.commands.Command;
 import project.taskcrusher.logic.commands.DeleteCommand;
+import project.taskcrusher.logic.commands.DoneCommand;
 import project.taskcrusher.logic.commands.EditCommand;
 import project.taskcrusher.logic.commands.ExitCommand;
 import project.taskcrusher.logic.commands.FindCommand;
@@ -72,7 +73,10 @@ public class Parser {
 
         case HelpCommand.COMMAND_WORD:
             return new HelpCommand();
-
+            
+        case DoneCommand.COMMAND_WORD:
+       	 return new DoneCommandParser().parse(arguments);
+            
         default:
             return new IncorrectCommand(MESSAGE_UNKNOWN_COMMAND);
         }
