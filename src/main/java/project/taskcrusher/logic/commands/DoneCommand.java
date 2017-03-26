@@ -1,14 +1,10 @@
 package project.taskcrusher.logic.commands;
 
-import java.util.List;
-
 import project.taskcrusher.commons.core.Messages;
 import project.taskcrusher.commons.core.UnmodifiableObservableList;
 import project.taskcrusher.logic.commands.exceptions.CommandException;
 import project.taskcrusher.model.task.ReadOnlyTask;
-import project.taskcrusher.model.task.Task;
 import project.taskcrusher.model.task.UniqueTaskList;
-import project.taskcrusher.model.task.UniqueTaskList.TaskNotFoundException;
 
 /**
  * Deletes a person identified using it's last displayed index from the address book.

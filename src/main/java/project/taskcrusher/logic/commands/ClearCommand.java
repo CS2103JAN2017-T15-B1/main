@@ -7,14 +7,14 @@ import project.taskcrusher.model.UserInbox;
  */
 public class ClearCommand extends Command {
 
-	public static final String COMMAND_WORD = "clear";
-    public static final String MESSAGE_SUCCESS = "Active list has been cleared!";
+  public static final String COMMAND_WORD = "clear";
+  public static final String MESSAGE_SUCCESS = "Active list has been cleared!";
 
 
-    @Override
+  @Override
     public CommandResult execute() {
         assert model != null;
-        model.resetData(new UserInbox());
-        return new CommandResult(MESSAGE_SUCCESS);
-    }
+    model.resetData(new UserInbox());
+    return new CommandResult(MESSAGE_SUCCESS);
+  }
 }
