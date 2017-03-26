@@ -11,7 +11,7 @@ import project.taskcrusher.model.shared.DateUtil;
  */
 public class Deadline {
 
-  public static final String MESSAGE_DEADLINE_CONSTRAINTS = "Deadline provided must be a relative" 
+  public static final String MESSAGE_DEADLINE_CONSTRAINTS = "Deadline provided must be a relative"
       + " or absolute date, and must not have passed";
   public static final String NO_DEADLINE = "";
   public static final String COMPLETED_DEADLINE = "completed";
@@ -43,7 +43,7 @@ public class Deadline {
      * storage, and therefore the checking of whether the deadline date is in
      * the past should NOT be bypassed.
      *
-     * 
+     *
      */
   public Deadline(String deadline, boolean isNew) throws IllegalValueException {
         assert deadline != null;
@@ -89,7 +89,6 @@ public class Deadline {
       try {
         return Optional.of(DateUtil.parseDate(this.deadline, false));
       } catch (IllegalValueException e) {
-               
         e.printStackTrace();
         return deadlineAsDate;
       }

@@ -62,7 +62,7 @@ public class TaskListCard extends UiPart<Region> {
     if (task.getDeadline().hasDeadline()) {
 //            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
-      deadline.setText(MESSAGE_DEADLINE_BY 
+      deadline.setText(MESSAGE_DEADLINE_BY
             + DateUtil.dateAsString(task.getDeadline().getDate().get()));
     } else if (task.getDeadline().deadline.equals(COMPLETED_DEADLINE)) {
       deadline.setText(COMPLETED_DEADLINE);
