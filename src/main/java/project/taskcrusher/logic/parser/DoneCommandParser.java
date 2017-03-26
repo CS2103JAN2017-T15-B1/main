@@ -32,7 +32,7 @@ public class DoneCommandParser {
         new ArgumentTokenizer(PREFIX_PRIORITY, PREFIX_DATE, PREFIX_LOCATION,
         PREFIX_DESCRIPTION, PREFIX_TAG);
     argsTokenizer.tokenize(args);
-    List<Optional<String>> preambleFields = 
+    List<Optional<String>> preambleFields =
         ParserUtil.splitPreamble(argsTokenizer.getPreamble().orElse(""), 2);
     Optional<Integer> index = preambleFields.get(0).flatMap(ParserUtil::parseIndex);
     if (!index.isPresent()) {
