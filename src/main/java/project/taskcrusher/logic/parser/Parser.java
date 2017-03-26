@@ -69,11 +69,9 @@ public class Parser {
             return new ListCommandParser().parse(arguments);
 
         case ExitCommand.COMMAND_WORD:
-            return new ExitCommand();
-            
+            return new ExitCommand();   
         case HelpCommand.COMMAND_WORD:
-          return new HelpCommand(); 
-          
+          return new HelpCommand();    
         case DoneCommand.COMMAND_WORD:
        	 return new DoneCommandParser().parse(arguments);
         default:

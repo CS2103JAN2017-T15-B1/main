@@ -21,7 +21,7 @@ public class DoneCommand extends Command {
             + ": Complete the task identified by the index number used in the last task listing.\n"
             + "Parameters: INDEX (must be a positive integer)\n"
             + "Example: " + COMMAND_WORD + " 1";
-  public static final String MESSAGE_DONE_TASK_SUCCESS = "Complete Task: %1$s";    
+  public static final String MESSAGE_DONE_TASK_SUCCESS = "Complete Task: %1$s";
   public static final String MESSAGE_DUPLICATE_TASK = "This task exists in the active list.";
 
   public final int targetIndex;
