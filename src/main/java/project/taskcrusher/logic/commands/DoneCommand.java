@@ -25,7 +25,6 @@ public class DoneCommand extends Command {
   public DoneCommand(int targetIndex) {
     this.targetIndex = targetIndex;
   }
-  
 
   /*    List<ReadOnlyTask> lastShownList = model.getFilteredTaskList();
     if (filteredTaskListIndex >= lastShownList.size()) {
