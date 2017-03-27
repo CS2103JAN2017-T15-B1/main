@@ -21,32 +21,32 @@ import project.taskcrusher.logic.commands.IncorrectCommand;
  */
 public class DoneCommandParser {
 
-	/**
-	 * Parses the given {@code String} of arguments in the context of the
-	 * DeleteCommand and returns an DeleteCommand object for execution.
-	 */
-	public Command parse(String args) {
+    /**
+     * Parses the given {@code String} of arguments in the context of the
+     * DeleteCommand and returns an DeleteCommand object for execution.
+     */
+    public Command parse(String args) {
 
-		args = args + " d/ completed";
-		ArgumentTokenizer argsTokenizer = new ArgumentTokenizer(PREFIX_PRIORITY, PREFIX_DATE, PREFIX_LOCATION,
-				PREFIX_DESCRIPTION, PREFIX_TAG);
-		argsTokenizer.tokenize(args);
-		List<Optional<String>> preambleFields = ParserUtil.splitPreamble(argsTokenizer.getPreamble().orElse(""), 2);
-		Optional<Integer> index = preambleFields.get(0).flatMap(ParserUtil::parseIndex);
-		if (!index.isPresent()) {
-			return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
-		}
+        args = args + " d/ completed";
+        ArgumentTokenizer argsTokenizer = new ArgumentTokenizer(PREFIX_PRIORITY, PREFIX_DATE, PREFIX_LOCATION,
+                PREFIX_DESCRIPTION, PREFIX_TAG);
+        argsTokenizer.tokenize(args);
+        List<Optional<String>> preambleFields = ParserUtil.splitPreamble(argsTokenizer.getPreamble().orElse(""), 2);
+        Optional<Integer> index = preambleFields.get(0).flatMap(ParserUtil::parseIndex);
+        if (!index.isPresent()) {
+            return new IncorrectCommand(String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
+        }
 
-		EditTaskDescriptor editTaskDescriptor = new EditTaskDescriptor();
-		try {
-			editTaskDescriptor.setDeadline(ParserUtil.parseDeadline(argsTokenizer.getValue(PREFIX_DATE)));
-		} catch (IllegalValueException ive) {
-			return new IncorrectCommand(ive.getMessage());
-		}
+        EditTaskDescriptor editTaskDescriptor = new EditTaskDescriptor();
+        try {
+            editTaskDescriptor.setDeadline(ParserUtil.parseDeadline(argsTokenizer.getValue(PREFIX_DATE)));
+        } catch (IllegalValueException ive) {
+            return new IncorrectCommand(ive.getMessage());
+        }
 
-		if (!editTaskDescriptor.isAnyFieldEdited()) {
-			return new IncorrectCommand(EditCommand.MESSAGE_NOT_EDITED);
-		}
-		return new EditCommand(index.get(), editTaskDescriptor);
-	}
+        if (!editTaskDescriptor.isAnyFieldEdited()) {
+            return new IncorrectCommand(EditCommand.MESSAGE_NOT_EDITED);
+        }
+        return new EditCommand(index.get(), editTaskDescriptor);
+    }
 }
