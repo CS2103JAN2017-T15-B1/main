@@ -1,61 +1,60 @@
 package project.taskcrusher.logic.commands;
 
+import java.util.List;
+
 import project.taskcrusher.commons.core.Messages;
-import project.taskcrusher.commons.core.UnmodifiableObservableList;
 import project.taskcrusher.logic.commands.exceptions.CommandException;
 import project.taskcrusher.model.task.ReadOnlyTask;
+import project.taskcrusher.model.task.Task;
 import project.taskcrusher.model.task.UniqueTaskList;
 
 /**
- * Deletes a person identified using it's last displayed index from the address
- * book.
+ * Done the details of an existing person in the address book.
  */
 public class DoneCommand extends Command {
 
     public static final String COMMAND_WORD = "done";
 
-    public static final String MESSAGE_USAGE = COMMAND_WORD
-            + ": Complete the task identified by the index number used in the last task listing.\n"
-            + "Parameters: INDEX (must be a positive integer)\n" + "Example: " + COMMAND_WORD + " 1";
-    public static final String MESSAGE_DONE_TASK_SUCCESS = "Complete Task: %1$s";
-    public static final String MESSAGE_DUPLICATE_TASK = "This task exists in the active list.";
+    public static final String MESSAGE_USAGE = COMMAND_WORD + "Marks the task done "
+            + "by the index number used in the last task listing. "
+            + "Parameters: INDEX (must be a positive integer) [TASK_NAME]"
+            + " [d/DEADLINE] [p/PRIORITY] [//DESCRIPTION] [t/TAG]...\n"
+            + "Example: " + COMMAND_WORD + " 1 p/2 //a description";
 
-    public final int targetIndex;
+    public static final String MESSAGE_EDIT_TASK_SUCCESS = "Done task: %1$s";
+    public static final String MESSAGE_NOT_EDITED = "At least one field to done must be provided.";
+    public static final String MESSAGE_DUPLICATE_TASK = "This task already exists in the active list.";
 
-    public DoneCommand(int targetIndex) {
-        this.targetIndex = targetIndex;
-    }
+    private final int filteredTaskListIndex;
 
-    /*
-     * List<ReadOnlyTask> lastShownList = model.getFilteredTaskList(); if
-     * (filteredTaskListIndex >= lastShownList.size()) { throw new
-     * CommandException(Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX); }
-     *
-     * ReadOnlyTask taskToEdit = lastShownList.get(filteredTaskListIndex); Task
-     * editedTask = createEditedTask(taskToEdit, editTaskDescriptor);
-     *
-     * try { model.updateTask(filteredTaskListIndex, editedTask); } catch
-     * (UniqueTaskList.DuplicateTaskException dpe) { throw new
-     * CommandException(MESSAGE_DUPLICATE_TASK); }
-     * model.updateFilteredListToShowAll();
+    /**
+     * @param filteredTaskListIndex the index of the task in the filtered task list to done
+     * @param doneTaskDescriptor details to done the task with
      */
+    public DoneCommand(int filteredTaskListIndex) {
+        assert filteredTaskListIndex > 0;
+
+        // converts filteredPersonListIndex from one-based to zero-based.
+        this.filteredTaskListIndex = filteredTaskListIndex - 1;
+    }
 
     @Override
     public CommandResult execute() throws CommandException {
-        UnmodifiableObservableList<ReadOnlyTask> lastShownList = model.getFilteredTaskList();
-        if (lastShownList.size() < targetIndex) {
+        List<ReadOnlyTask> lastShownList = model.getFilteredTaskList();
+
+        if (filteredTaskListIndex >= lastShownList.size()) {
             throw new CommandException(Messages.MESSAGE_INVALID_TASK_DISPLAYED_INDEX);
         }
 
-        ReadOnlyTask taskToMarkDone = lastShownList.get(targetIndex - 1);
+        ReadOnlyTask taskToDone = lastShownList.get(filteredTaskListIndex);
+        Task doneTask = new Task(taskToDone.getName(), taskToDone.getDeadline(), taskToDone.getPriority(), taskToDone.getDescription(), taskToDone.getTags(), true);
 
         try {
-            model.updateTask(targetIndex, taskToMarkDone);
+            model.updateTask(filteredTaskListIndex, doneTask);
         } catch (UniqueTaskList.DuplicateTaskException dpe) {
             throw new CommandException(MESSAGE_DUPLICATE_TASK);
         }
-
-        return new CommandResult(String.format(MESSAGE_DONE_TASK_SUCCESS, taskToMarkDone));
+        model.updateFilteredTaskListToShowAll();
+        return new CommandResult(String.format(MESSAGE_EDIT_TASK_SUCCESS, taskToDone));
     }
-
 }
