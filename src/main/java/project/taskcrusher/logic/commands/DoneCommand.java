@@ -47,7 +47,8 @@ public class DoneCommand extends Command {
         }
 
         ReadOnlyTask taskToDone = lastShownList.get(filteredTaskListIndex);
-        Task doneTask = new Task(taskToDone.getName(), taskToDone.getDeadline(), taskToDone.getPriority(), taskToDone.getDescription(), taskToDone.getTags(), true);
+        Task doneTask = new Task(taskToDone.getName(), taskToDone.getDeadline(), taskToDone.getPriority(), 
+                taskToDone.getDescription(), taskToDone.getTags(), true);
 
         try {
             model.updateTask(filteredTaskListIndex, doneTask);
