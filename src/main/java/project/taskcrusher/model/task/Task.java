@@ -17,6 +17,7 @@ public class Task implements ReadOnlyTask {
     private Deadline deadline;
     private Priority priority;
     private Description description;
+    boolean done;
 
     private UniqueTagList tags;
 
@@ -31,6 +32,18 @@ public class Task implements ReadOnlyTask {
         this.priority = priority;
         this.description = description;
         this.tags = new UniqueTagList(tags); // protect internal tags from changes in the arg list
+        this.done = false;
+    }
+    public Task(Name name, Deadline deadline, Priority priority,
+            Description description, UniqueTagList tags, boolean done) {
+        assert !CollectionUtil.isAnyNull(name);
+
+        this.name = name;
+        this.deadline = deadline;
+        this.priority = priority;
+        this.description = description;
+        this.tags = new UniqueTagList(tags); // protect internal tags from changes in the arg list
+        this.done = false;
     }
 
     /**

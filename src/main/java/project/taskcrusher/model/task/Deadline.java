@@ -11,24 +11,27 @@ import project.taskcrusher.model.shared.DateUtil;
  */
 public class Deadline {
 
-    public static final String MESSAGE_DEADLINE_CONSTRAINTS = "Deadline provided must be a relative" +
-        " or absolute date, and must not have passed";
+    public static final String MESSAGE_DEADLINE_CONSTRAINTS = "Deadline provided must be a relative"
+            + " or absolute date, and must not have passed";
     public static final String NO_DEADLINE = "";
+    public static final String COMPLETED_DEADLINE = "completed";
     public static final boolean IS_LOADING_FROM_STORAGE = false;
 
     public final String deadline;
 
     /**
-     * Creates a Deadline using the String passed
+     * Creates a Deadline using the String passed.
      *
      * @param deadline
-     * @throws IllegalValueException
+     * @throws illegalvalueexception
      */
     public Deadline(String deadline) throws IllegalValueException {
         assert deadline != null;
 
         if (deadline.equals(NO_DEADLINE)) {
             this.deadline = NO_DEADLINE;
+        } else if (deadline.equals(COMPLETED_DEADLINE)) {
+            this.deadline = COMPLETED_DEADLINE;
         } else {
             this.deadline = DateUtil.dateAsString(DateUtil.parseDate(deadline, true));
         }
@@ -40,14 +43,15 @@ public class Deadline {
      * storage, and therefore the checking of whether the deadline date is in
      * the past should NOT be bypassed.
      *
-     * @param deadline
-     * @throws IllegalValueException
+     *
      */
     public Deadline(String deadline, boolean isNew) throws IllegalValueException {
         assert deadline != null;
 
         if (deadline.equals(NO_DEADLINE)) {
             this.deadline = NO_DEADLINE;
+        } else if (deadline.equals(COMPLETED_DEADLINE)) {
+            this.deadline = COMPLETED_DEADLINE;
         } else {
             this.deadline = DateUtil.dateAsString(DateUtil.parseDate(deadline, isNew));
         }
@@ -85,7 +89,6 @@ public class Deadline {
             try {
                 return Optional.of(DateUtil.parseDate(this.deadline, false));
             } catch (IllegalValueException e) {
-                // TODO this should not occur by default, provided that this object was instantiated successfully.
                 e.printStackTrace();
                 return deadlineAsDate;
             }
@@ -94,63 +97,61 @@ public class Deadline {
         }
     }
 
-//    /**
-//     * Checks whether a deadline is valid
-//     *
-//     * @param deadlineToCheck
-//     * @return true if deadline exists and is on or after time of checking,
-//     *         false if no deadline, multiple deadlines or deadline is before
-//     *         time of checking
-//     */
-//    private static boolean isValidDeadline(String deadlineToCheck) {
-//        assert deadlineToCheck != null;
-//
-//        Date parsed = DateUtil.parseDate(deadlineToCheck);
-//
-//        if (!DateUtil.hasPassed(parsed)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//
-//    }
-//
-//    /**
-//     * Checks whether a deadline is valid
-//     *
-//     * @param deadlineToCheck
-//     * @return true if deadline exists and is on or after time of checking,
-//     *         false if no deadline, multiple deadlines or deadline is before
-//     *         time of checking
-//     */
-//    public static boolean isValidDeadline(String deadlineToCheck, boolean isNew) {
-//        assert deadlineToCheck != null;
-//        if (!isNew) {
-//            return true;
-//        } else if (deadlineToCheck.equals(NO_DEADLINE)) {
-//            return true;
-//        }
-//        Date rightNow = new Date();
-//        PrettyTimeParser dateParser = new PrettyTimeParser();
-//        List<Date> parsedDeadline = dateParser.parse(deadlineToCheck);
-//
-//        // //TODO replace parsing with set deadlines to avoid ambiguity/multiple
-//        // deadlines
-//        // if (parsedDeadline.size() != 1) {
-//        // return false;
-//        // }
-//
-//        Date deadline = parsedDeadline.get(0);
-//
-//        if (!deadline.before(rightNow)) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
+    // /**
+    // * Checks whether a deadline is valid
+    // *
+    // * @param deadlineToCheck
+    // * @return true if deadline exists and is on or after time of checking,
+    // * false if no deadline, multiple deadlines or deadline is before
+    // * time of checking
+    // */
+    // private static boolean isValidDeadline(String deadlineToCheck) {
+    // assert deadlineToCheck != null;
+    //
+    // Date parsed = DateUtil.parseDate(deadlineToCheck);
+    //
+    // if (!DateUtil.hasPassed(parsed)) {
+    // return true;
+    // } else {
+    // return false;
+    // }
+    //
+    // }
+    //
+    // /**
+    // * Checks whether a deadline is valid
+    // *
+    // * @param deadlineToCheck
+    // * @return true if deadline exists and is on or after time of checking,
+    // * false if no deadline, multiple deadlines or deadline is before
+    // * time of checking
+    // */
+    // public static boolean isValidDeadline(String deadlineToCheck, boolean
+    // isNew) {
+    // assert deadlineToCheck != null;
+    // if (!isNew) {
+    // return true;
+    // } else if (deadlineToCheck.equals(NO_DEADLINE)) {
+    // return true;
+    // }
+    // Date rightNow = new Date();
+    // PrettyTimeParser dateParser = new PrettyTimeParser();
+    // List<Date> parsedDeadline = dateParser.parse(deadlineToCheck);
+    //
+    // // //TODO replace parsing with set deadlines to avoid ambiguity/multiple
+    // // deadlines
+    // // if (parsedDeadline.size() != 1) {
+    // // return false;
+    // // }
+    //
+    // Date deadline = parsedDeadline.get(0);
+    //
+    // if (!deadline.before(rightNow)) {
+    // return true;
+    // } else {
 
     public boolean hasDeadline() {
-        return !deadline.equals(NO_DEADLINE);
+        return !(deadline.equals(NO_DEADLINE) || deadline.equals(COMPLETED_DEADLINE));
     }
 
 }
