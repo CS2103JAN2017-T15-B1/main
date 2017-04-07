@@ -8,8 +8,8 @@ import javafx.collections.transformation.FilteredList;
 import project.taskcrusher.commons.core.ComponentManager;
 import project.taskcrusher.commons.core.LogsCenter;
 import project.taskcrusher.commons.core.UnmodifiableObservableList;
-import project.taskcrusher.commons.events.model.AddressBookChangedEvent;
 import project.taskcrusher.commons.events.model.ListsToShowUpdatedEvent;
+import project.taskcrusher.commons.events.model.UserInboxChangedEvent;
 import project.taskcrusher.commons.util.CollectionUtil;
 import project.taskcrusher.commons.util.StringUtil;
 import project.taskcrusher.model.event.Event;
@@ -27,12 +27,10 @@ import project.taskcrusher.model.task.UniqueTaskList.TaskNotFoundException;
 //@@author A0127737X
 /**
  * Represents the in-memory model of the user inbox data.
- * All changes to any model should be synchronized.
+ * All changes to any model should be synchronised.
  */
 public class ModelManager extends ComponentManager implements Model {
     private static final Logger logger = LogsCenter.getLogger(ModelManager.class);
-    private static final boolean LIST_EMPTY = true;
-    private static final boolean LIST_NOT_EMPTY = false;
 
     private final UserInbox userInbox;
     private final FilteredList<ReadOnlyTask> filteredTasks;
@@ -90,7 +88,7 @@ public class ModelManager extends ComponentManager implements Model {
     public void resetData(ReadOnlyUserInbox newData) {
         userInbox.resetData(newData);
         indicateUserInboxChanged();
-        prepareListsForUi();
+        signalUiForUpdatedLists();
     }
 
     @Override
@@ -100,19 +98,15 @@ public class ModelManager extends ComponentManager implements Model {
 
     /** Raises an event to indicate the model has changed */
     private void indicateUserInboxChanged() {
-        raise(new AddressBookChangedEvent(userInbox));
+        raise(new UserInboxChangedEvent(userInbox));
     }
 
     //@@author A0127737X
-    public void prepareListsForUi() {
-        boolean isTaskListToShowEmpty = LIST_NOT_EMPTY, isEventListToShowEmpty = LIST_NOT_EMPTY;
-        if (filteredEvents.isEmpty()) {
-            isEventListToShowEmpty = LIST_EMPTY;
-        }
-        if (filteredTasks.isEmpty()) {
-            isTaskListToShowEmpty = LIST_EMPTY;
-        }
-        raise(new ListsToShowUpdatedEvent(isEventListToShowEmpty, isTaskListToShowEmpty));
+    public void signalUiForUpdatedLists() {
+        int eventCount = filteredEvents.size();
+        int taskCount = filteredTasks.size();
+
+        raise(new ListsToShowUpdatedEvent(eventCount, taskCount));
     }
 
     @Override
@@ -131,14 +125,13 @@ public class ModelManager extends ComponentManager implements Model {
         userInbox.removeTask(target);
         indicateUserInboxChanged();
         updateFilteredListsToShowActiveToDo();
-        prepareListsForUi();
+        signalUiForUpdatedLists();
     }
 
     @Override
     public synchronized void addTask(Task task) throws UniqueTaskList.DuplicateTaskException {
         saveUserInboxStateForUndo();
         userInbox.addTask(task);
-        updateFilteredTaskListToShowAll();
         updateFilteredListsToShowActiveToDo();
         indicateUserInboxChanged();
     }
@@ -150,25 +143,27 @@ public class ModelManager extends ComponentManager implements Model {
         saveUserInboxStateForUndo();
         int taskListIndex = filteredTasks.getSourceIndex(filteredTaskListIndex);
         userInbox.updateTask(taskListIndex, editedTask);
-        indicateUserInboxChanged();
         updateFilteredListsToShowActiveToDo();
-        prepareListsForUi();
+        indicateUserInboxChanged();
     }
 
     @Override
     public synchronized void markTask(int filteredTaskListIndex, int markFlag) {
         saveUserInboxStateForUndo();
         userInbox.markTask(filteredTaskListIndex, markFlag);
+        updateFilteredListsToShowActiveToDo();
         indicateUserInboxChanged();
-        prepareListsForUi();
     }
 
     @Override
-    public synchronized void markEvent(int filteredEventListIndex, int markFlag) {
+    public synchronized void switchTaskToEvent(ReadOnlyTask toDelete, Event toAdd) throws
+        DuplicateEventException, TaskNotFoundException {
+        assert toDelete != null && toAdd != null;
         saveUserInboxStateForUndo();
-        userInbox.markEvent(filteredEventListIndex, markFlag);
+        userInbox.removeTask(toDelete);
+        userInbox.addEvent(toAdd);
+        updateFilteredListsToShowActiveToDo();
         indicateUserInboxChanged();
-        prepareListsForUi();
     }
 
     //=========== Event operations =========================================================================
@@ -177,9 +172,8 @@ public class ModelManager extends ComponentManager implements Model {
     public synchronized void deleteEvent(ReadOnlyEvent target) throws EventNotFoundException {
         saveUserInboxStateForUndo();
         userInbox.removeEvent(target);
-        indicateUserInboxChanged();
         updateFilteredListsToShowActiveToDo();
-        prepareListsForUi();
+        indicateUserInboxChanged();
     }
 
     @Override
@@ -189,15 +183,22 @@ public class ModelManager extends ComponentManager implements Model {
         saveUserInboxStateForUndo();
         int eventListIndex = filteredEvents.getSourceIndex(filteredEventListIndex);
         userInbox.updateEvent(eventListIndex, editedEvent);
-        indicateUserInboxChanged();
         updateFilteredListsToShowActiveToDo();
-        prepareListsForUi();
+        indicateUserInboxChanged();
     }
 
     @Override
     public synchronized void addEvent(Event event) throws DuplicateEventException {
         saveUserInboxStateForUndo();
         userInbox.addEvent(event);
+        updateFilteredListsToShowActiveToDo();
+        indicateUserInboxChanged();
+    }
+
+    @Override
+    public synchronized void markEvent(int filteredEventListIndex, int markFlag) {
+        saveUserInboxStateForUndo();
+        userInbox.markEvent(filteredEventListIndex, markFlag);
         updateFilteredListsToShowActiveToDo();
         indicateUserInboxChanged();
     }
@@ -212,31 +213,14 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     @Override
-    public synchronized void switchTaskToEvent(ReadOnlyTask toDelete, Event toAdd) throws
-        DuplicateEventException, TaskNotFoundException {
-        assert toDelete != null && toAdd != null;
-        saveUserInboxStateForUndo();
-        userInbox.removeTask(toDelete);
-        userInbox.addEvent(toAdd);
-        indicateUserInboxChanged();
-        updateFilteredListsToShowActiveToDo();
-        prepareListsForUi();
-    }
-
-    @Override
     public synchronized void switchEventToTask(ReadOnlyEvent toDelete, Task toAdd) throws
         DuplicateTaskException, EventNotFoundException {
         assert toDelete != null && toAdd != null;
         saveUserInboxStateForUndo();
         userInbox.removeEvent(toDelete);
         userInbox.addTask(toAdd);
-        indicateUserInboxChanged();
         updateFilteredListsToShowActiveToDo();
-        prepareListsForUi();
-    }
-
-    public UnmodifiableObservableList<ReadOnlyEvent> getEventsWithOverlappingTimeslots(Timeslot candidate) {
-        return new UnmodifiableObservableList<>(userInbox.getEventsWithOverlappingTimeslots(candidate));
+        indicateUserInboxChanged();
     }
 
     @Override
@@ -252,12 +236,6 @@ public class ModelManager extends ComponentManager implements Model {
         return new UnmodifiableObservableList<>(filteredTasks);
     }
 
-    @Override
-    public void updateFilteredTaskListToShowAll() {
-        filteredTasks.setPredicate(null);
-        prepareListsForUi();
-    }
-
     //=========== Filtered Event List Accessors =============================================================
 
     @Override
@@ -265,19 +243,13 @@ public class ModelManager extends ComponentManager implements Model {
         return new UnmodifiableObservableList<>(filteredEvents);
     }
 
-    @Override
-    public void updateFilteredEventListToShowAll() {
-        filteredEvents.setPredicate(null);
-        prepareListsForUi();
-    }
-
-    //====================== Combined filtering =================================================
+    //=========== Combined filtering for UI =================================================================
 
     @Override
     public void updateFilteredListsShowAll() {
         filteredEvents.setPredicate(null);
         filteredTasks.setPredicate(null);
-        prepareListsForUi();
+        signalUiForUpdatedLists();
     }
 
     @Override
@@ -290,12 +262,6 @@ public class ModelManager extends ComponentManager implements Model {
         updateFilteredLists(new PredicateExpression(new CompletionQualifier(true)));
     }
 
-    private void updateFilteredLists(Expression expression) {
-        filteredTasks.setPredicate(expression::satisfies);
-        filteredEvents.setPredicate(expression::satisfies);
-        prepareListsForUi();
-    }
-
     @Override
     public void updateFilteredLists(Set<String> keywords, boolean showCompletedToo) {
         updateFilteredLists(new PredicateExpression(new KeywordQualifier(keywords, showCompletedToo)));
@@ -306,6 +272,12 @@ public class ModelManager extends ComponentManager implements Model {
         updateFilteredLists(new PredicateExpression(new TimeslotQualifier(userInterestedTimeslot)));
     }
 
+    private void updateFilteredLists(Expression expression) {
+        filteredTasks.setPredicate(expression::satisfies);
+        filteredEvents.setPredicate(expression::satisfies);
+        signalUiForUpdatedLists();
+    }
+
     //========== Inner classes/interfaces used for filtering =================================================
 
     interface Expression {
@@ -314,7 +286,6 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     private class PredicateExpression implements Expression {
-
         private final Qualifier qualifier;
 
         PredicateExpression(Qualifier qualifier) {
@@ -339,23 +310,23 @@ public class ModelManager extends ComponentManager implements Model {
 
     private class KeywordQualifier implements Qualifier {
         private Set<String> nameKeyWords;
-        private boolean showCompletedToo;
+        private boolean showCompletedItemsToo;
 
-        KeywordQualifier(Set<String> nameKeyWords, boolean showCompletedToo) {
+        KeywordQualifier(Set<String> nameKeyWords, boolean showCompletedItemsToo) {
             this.nameKeyWords = nameKeyWords;
-            this.showCompletedToo = showCompletedToo;
+            this.showCompletedItemsToo = showCompletedItemsToo;
         }
 
         @Override
         public boolean run(ReadOnlyUserToDo item) {
-            if (showCompletedToo) {
+            if (showCompletedItemsToo) {
                 return nameKeyWords.stream()
-                    .filter(keyword -> StringUtil.containsWordIgnoreCase(item.toString(), keyword))
+                    .filter(keyword -> StringUtil.containsSubstringIgnoreCase(item.toString(), keyword))
                     .findAny()
                     .isPresent();
             } else {
                 return !item.isComplete() && nameKeyWords.stream()
-                        .filter(keyword -> StringUtil.containsWordIgnoreCase(item.toString(), keyword))
+                        .filter(keyword -> StringUtil.containsSubstringIgnoreCase(item.toString(), keyword))
                         .findAny()
                         .isPresent();
             }
@@ -382,27 +353,18 @@ public class ModelManager extends ComponentManager implements Model {
 
         @Override
         public boolean run(ReadOnlyUserToDo item) {
-            if (item instanceof ReadOnlyEvent) {
+            if (item.isComplete()) {
+                return false;
+            } else if (item instanceof ReadOnlyEvent) {
                 ReadOnlyEvent event = (ReadOnlyEvent) item;
-                if (event.isComplete()) {
-                    return false;
-                } else if (event.hasOverlappingTimeslot(userInterestedTimeslot)) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return event.hasOverlappingTimeslot(userInterestedTimeslot);
             } else if (item instanceof ReadOnlyTask) {
                 ReadOnlyTask task = (ReadOnlyTask) item;
-                if (task.isComplete()) {
-                    return false;
-                } else if (task.getDeadline().isWithin(userInterestedTimeslot)) { // more OOP way
-                    return true;
-                } else {
-                    return false;
-                }
+                return task.getDeadline().isWithin(userInterestedTimeslot);
+            } else {
+                assert false;
+                return false;
             }
-            assert false;
-            return false; //should not reach here
         }
 
         @Override
@@ -410,11 +372,13 @@ public class ModelManager extends ComponentManager implements Model {
             return "user-interested timeslot is " + userInterestedTimeslot.toString();
         }
     }
+
     /**
      * checks if the given UserToDo is marked as complete or incomplete
      */
     private class CompletionQualifier implements Qualifier {
-        boolean showComplete;
+        private boolean showComplete;
+
         CompletionQualifier(boolean showComplete) {
             this.showComplete = showComplete;
         }

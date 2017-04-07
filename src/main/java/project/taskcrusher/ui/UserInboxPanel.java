@@ -15,7 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import project.taskcrusher.commons.core.LogsCenter;
 import project.taskcrusher.commons.events.model.ListsToShowUpdatedEvent;
-import project.taskcrusher.commons.events.ui.PersonPanelSelectionChangedEvent;
 import project.taskcrusher.commons.util.FxViewUtil;
 import project.taskcrusher.model.event.ReadOnlyEvent;
 import project.taskcrusher.model.task.ReadOnlyTask;
@@ -51,23 +50,12 @@ public class UserInboxPanel extends UiPart<Region> {
         eventListView.setItems(eventList);
         taskListView.setCellFactory(listView -> new TaskListViewCell());
         eventListView.setCellFactory(listView -> new EventListViewCell());
-        setEventHandlerForSelectionChangeEvent();
     }
 
     private void addToPlaceholder(AnchorPane placeHolderPane) {
         SplitPane.setResizableWithParent(placeHolderPane, false);
         FxViewUtil.applyAnchorBoundaryParameters(getRoot(), 0.0, 0.0, 0.0, 0.0);
         placeHolderPane.getChildren().add(getRoot());
-    }
-
-    private void setEventHandlerForSelectionChangeEvent() {
-        taskListView.getSelectionModel().selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (newValue != null) {
-                        //logger.fine("Selection in person list panel changed to : '" + newValue + "'");
-                        raise(new PersonPanelSelectionChangedEvent(newValue));
-                    }
-                });
     }
 
     public void scrollTo(int index) {
@@ -111,26 +99,20 @@ public class UserInboxPanel extends UiPart<Region> {
     @Subscribe
     public void handleListsToShowUpdatedEvent(ListsToShowUpdatedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
-        if (event.eventListToShowEmpty) {
-            eventListView.setManaged(SET_LIST_HIDDEN);
+        if (event.eventCount == 0) {
             eventListView.setVisible(SET_LIST_HIDDEN);
             eventHeader.setText("Events: Nothing to Show!");
-            System.out.println("he");
         } else {
-            eventListView.setManaged(SET_LIST_VISIBLE);
             eventListView.setVisible(SET_LIST_VISIBLE);
-            eventHeader.setText("Events: ");
+            eventHeader.setText("Events: " + event.eventCount + " listed");
         }
 
-        if (event.taskListToShowEmpty) {
-            taskListView.setManaged(SET_LIST_HIDDEN);
+        if (event.taskCount == 0) {
             taskListView.setVisible(SET_LIST_HIDDEN);
             taskHeader.setText("Tasks: Nothing to Show!");
-            System.out.println("ho");
         } else {
-            taskListView.setManaged(SET_LIST_VISIBLE);
             taskListView.setVisible(SET_LIST_VISIBLE);
-            taskHeader.setText("Tasks: ");
+            taskHeader.setText("Tasks: " + event.taskCount + " listed");
         }
     }
 

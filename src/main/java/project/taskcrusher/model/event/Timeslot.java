@@ -9,7 +9,7 @@ import project.taskcrusher.model.shared.DateUtilApache;
 /**
  * Represents a timeslot for an event from {@code start} to {@code end}
  */
-public class Timeslot {
+public class Timeslot implements Comparable<Timeslot> {
 
     public static final String MESSAGE_TIMESLOT_RANGE = "Start date must be before end date";
     public static final String MESSAGE_TIMESLOT_CLASH = "Timeslot clashes with one or more pre-existing events";
@@ -112,10 +112,19 @@ public class Timeslot {
 
     @Override
     public boolean equals(Object other) {
-        return other == this // short circuit if same object
-                || (other instanceof Timeslot // instanceof handles nulls
-                        && this.start.equals(((Timeslot) other).start)
-                        && this.end.equals(((Timeslot) other).end)); // state check
+        if (other == this) {
+            return true; // short circuit if same object
+        } else if (other instanceof Timeslot) {
+            String thisTimeslotStripSeconds = toString();
+            String otherTimeslotStripSeconds = ((Timeslot) other).toString();
+            return thisTimeslotStripSeconds.equals(otherTimeslotStripSeconds);
+        } else {
+            return false;
+        }
+    }
+
+    public int compareTo(Timeslot another) {
+        return this.start.compareTo(another.start);
     }
 
 }
