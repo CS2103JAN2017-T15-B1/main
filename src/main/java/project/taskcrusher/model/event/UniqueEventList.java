@@ -13,7 +13,7 @@ import project.taskcrusher.logic.commands.MarkCommand;
 //@@author A0127737X
 /**
  * stores a list of events that contain no duplicates. At any point in time, {@code internalList} is sorted
- * by the earliest timeslot.
+ * by the earliest timeslot of the events.
  *
  * @see Event#compareTo(Object)
  * @see CollectionUtil#elementsAreUnique(Collection)

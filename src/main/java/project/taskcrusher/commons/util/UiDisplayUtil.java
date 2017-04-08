@@ -23,7 +23,7 @@ public class UiDisplayUtil {
     /**
      * returns a string representation of the given deadline in a user-friendly format for display
      */
-    public static String deadlineForUi(Deadline deadline) {
+    public static String renderDeadlineAsStringForUi(Deadline deadline) {
         assert deadline != null;
         if (!deadline.hasDeadline()) {
             return MESSAGE_NO_DEADLINE;
@@ -58,7 +58,7 @@ public class UiDisplayUtil {
     /**
      * returns a string representation of the given time slot, with redundant details stripped for display
      */
-    public static String timeslotAsStringForUi(Timeslot timeslot) {
+    public static String renderTimeslotAsStringForUi(Timeslot timeslot) {
         assert timeslot != null;
         String endFormat, startFormat, prepend = "";
         if (isSameDate(timeslot.start, timeslot.end)) {
@@ -94,7 +94,7 @@ public class UiDisplayUtil {
         return "p=" + p.priority;
     }
 
-    public static String locationForUi(Location location) {
+    public static String getLocationStringForUi(Location location) {
         return location.hasLocation() ? "@ " + location.location : "";
     }
 

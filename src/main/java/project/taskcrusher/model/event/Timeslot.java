@@ -140,7 +140,7 @@ public class Timeslot implements Comparable<Timeslot> {
 
     @Override
     public String toString() {
-        return DateUtil.dateAsStringForStorage(start) + " to " + DateUtil.dateAsStringForStorage(end);
+        return DateUtil.getDateAsStringForStorage(start) + " to " + DateUtil.getDateAsStringForStorage(end);
     }
 
     @Override

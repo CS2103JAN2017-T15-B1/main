@@ -32,7 +32,7 @@ public class Deadline {
         if (deadline.equals(NO_DEADLINE)) {
             this.deadline = NO_DEADLINE;
         } else {
-            this.deadline = DateUtil.dateAsStringForStorage(DateUtil.parseDate(deadline));
+            this.deadline = DateUtil.getDateAsStringForStorage(DateUtil.parseDate(deadline));
         }
     }
 
@@ -103,7 +103,7 @@ public class Deadline {
     @Override
     public String toString() {
         if (this.hasDeadline()) {
-            return DateUtil.dateAsStringForStorage(this.getDate().get());
+            return DateUtil.getDateAsStringForStorage(this.getDate().get());
         } else {
             return Deadline.NO_DEADLINE;
         }

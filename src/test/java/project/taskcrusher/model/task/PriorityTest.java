@@ -19,7 +19,6 @@ public class PriorityTest {
         assertFalse(Priority.isValidPriority("4")); // out of range
 
         // valid priority
-        assertTrue(Priority.isValidPriority("0"));
         assertTrue(Priority.isValidPriority("1"));
         assertTrue(Priority.isValidPriority("2"));
         assertTrue(Priority.isValidPriority("3"));

@@ -75,7 +75,7 @@ public class EventCardHandle extends GuiHandle {
 
     public boolean isSameEvent(ReadOnlyEvent event) {
         String uiAdjustedPriority = UiDisplayUtil.priorityForUi(event.getPriority());
-        String uiAdjustedLocation = UiDisplayUtil.locationForUi(event.getLocation());
+        String uiAdjustedLocation = UiDisplayUtil.getLocationStringForUi(event.getLocation());
 
         return getEventName().equals(event.getName().name)
                 && getPriority().equals(uiAdjustedPriority)

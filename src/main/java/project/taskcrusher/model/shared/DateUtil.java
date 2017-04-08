@@ -74,7 +74,7 @@ public class DateUtil {
         return nattyParser.parse(toParse).get(0);
     }
 
-    public static String dateAsStringForStorage(Date date) {
+    public static String getDateAsStringForStorage(Date date) {
         assert date != null;
         SimpleDateFormat sdf = new SimpleDateFormat(PARSE_PATTERNS[0]);
         return sdf.format(date);

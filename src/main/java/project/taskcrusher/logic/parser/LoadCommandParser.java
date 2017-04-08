@@ -8,7 +8,7 @@ import project.taskcrusher.logic.commands.LoadCommand;
 
 //@@author A0127737X
 /**
- * Parses the arguments for load command. Also checks if the user wants to create new file before loading.
+ * Parses the arguments for load command. Also checks if the user wants to create a new file before loading.
  */
 public class LoadCommandParser {
 

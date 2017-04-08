@@ -27,8 +27,8 @@ public class XmlAdaptedTimeslot {
      * Converts a given Timeslot into this class for JAXB use.
      */
     public XmlAdaptedTimeslot(Timeslot timeslot) {
-        startDate = DateUtil.dateAsStringForStorage(timeslot.start);
-        endDate = DateUtil.dateAsStringForStorage(timeslot.end);
+        startDate = DateUtil.getDateAsStringForStorage(timeslot.start);
+        endDate = DateUtil.getDateAsStringForStorage(timeslot.end);
     }
 
     /**

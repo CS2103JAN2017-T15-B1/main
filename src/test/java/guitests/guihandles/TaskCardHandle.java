@@ -76,7 +76,7 @@ public class TaskCardHandle extends GuiHandle {
 
     public boolean isSameTask(ReadOnlyTask task) {
         String uiAdjustedPriority = UiDisplayUtil.priorityForUi(task.getPriority());
-        String uiAdjustedDeadline = UiDisplayUtil.deadlineForUi(task.getDeadline());
+        String uiAdjustedDeadline = UiDisplayUtil.renderDeadlineAsStringForUi(task.getDeadline());
 
         return getTaskName().equals(task.getName().name)
                 && getPriority().equals(uiAdjustedPriority)

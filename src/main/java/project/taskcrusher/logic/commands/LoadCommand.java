@@ -12,7 +12,8 @@ import project.taskcrusher.logic.commands.exceptions.CommandException;
 //@@author A0127737X
 /** loads an xml storage file. The user may specify if he/she wants to create a missing file,
  *  by providing the word "new" before the filename. or load an existing xml file. The loading of new file
- *  is achieved by posting LoadNewStorageFileEvent which is handled at the high-level MainApp instance.
+ *  is achieved by posting {@code LoadNewStorageFileEvent} which is handled at the high-level
+ *  {@code MainApp} instance.
  */
 public class LoadCommand extends Command {
     public static final String COMMAND_WORD = "load";
