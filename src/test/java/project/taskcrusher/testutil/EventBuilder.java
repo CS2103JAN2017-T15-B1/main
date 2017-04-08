@@ -12,6 +12,10 @@ import project.taskcrusher.model.shared.Priority;
 import project.taskcrusher.model.tag.Tag;
 import project.taskcrusher.model.tag.UniqueTagList;
 
+//@@author A0127737X
+/**
+ * Builds an TestEventCard object with specified fields.
+ */
 public class EventBuilder {
 
     private TestEventCard event;
@@ -21,7 +25,7 @@ public class EventBuilder {
     }
 
     /**
-     * Initializes the EventBuilder with the data of {@code taskToCopy}.
+     * Initializes the EventBuilder with the data of {@code eventToCopy}.
      */
     public EventBuilder(TestEventCard eventToCopy) {
         this.event = new TestEventCard(eventToCopy);
@@ -58,6 +62,7 @@ public class EventBuilder {
     public EventBuilder withTimeslots(List<Timeslot> timeslots) throws IllegalValueException {
         List<Timeslot> timeslotCopy = new ArrayList<Timeslot>();
         timeslotCopy.addAll(timeslots);
+        timeslotCopy.sort(null);
         this.event.setTimeslots(timeslotCopy);
         return this;
     }

@@ -63,6 +63,11 @@ public class TestTaskCard implements ReadOnlyTask {
     }
 
     @Override
+    public Description getDescription() {
+        return description;
+    }
+
+    @Override
     public Deadline getDeadline() {
         return deadline;
     }
@@ -70,11 +75,6 @@ public class TestTaskCard implements ReadOnlyTask {
     @Override
     public Priority getPriority() {
         return priority;
-    }
-
-    @Override
-    public Description getDescription() {
-        return description;
     }
 
     @Override
@@ -107,6 +107,7 @@ public class TestTaskCard implements ReadOnlyTask {
         return sb.toString();
     }
 
+    //@@author
     @Override
     public boolean isComplete() {
         return this.isComplete;

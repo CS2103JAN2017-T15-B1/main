@@ -12,10 +12,13 @@ import project.taskcrusher.commons.util.UiDisplayUtil;
 import project.taskcrusher.model.event.ReadOnlyEvent;
 import project.taskcrusher.model.tag.UniqueTagList;
 
+//@@author A0127737X
+/**
+ * Provides a handle to an event card in the event list panel.
+ */
 public class EventCardHandle extends GuiHandle {
     private static final String NAME_FIELD_ID = "#name";
     private static final String TAGS_FIELD_ID = "#tags";
-    private static final String TIMESLOT_FIELD_ID = "#timeslots";
     private static final String PRIORITY_FIELD_ID = "#priority";
     private static final String LOCATION_FIELD_ID = "#eventLocation";
     private static final String DESCRIPTION_FIELD_ID = "#description";
@@ -42,10 +45,6 @@ public class EventCardHandle extends GuiHandle {
     public String getPriority() {
         return getTextFromLabel(PRIORITY_FIELD_ID);
     }
-
-//    public String getTimeslots() {
-//        return getTextFromLabel(TIMESLOT_FIELD_ID);
-//    }
 
     public String getLocation() {
         return getTextFromLabel(LOCATION_FIELD_ID);
@@ -74,7 +73,6 @@ public class EventCardHandle extends GuiHandle {
         return guiRobot.from(node).lookup(TAGS_FIELD_ID).query();
     }
 
-    //@@author A0127737X
     public boolean isSameEvent(ReadOnlyEvent event) {
         String uiAdjustedPriority = UiDisplayUtil.priorityForUi(event.getPriority());
         String uiAdjustedLocation = UiDisplayUtil.locationForUi(event.getLocation());

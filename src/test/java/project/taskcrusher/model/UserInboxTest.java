@@ -66,6 +66,7 @@ public class UserInboxTest {
         inbox.resetData(newData);
     }
 
+    //@@author A0127737X
     @Test
     public void resetData_withDuplicateEvents_throwsAssertionError() {
         TypicalTestUserInbox td = new TypicalTestUserInbox();
@@ -73,13 +74,14 @@ public class UserInboxTest {
         // Repeat td.islandTrip twice
         List<Event> duplicateEvents = Arrays.asList(new Event(td.islandTrip), new Event(td.islandTrip));
         List<Tag> newTags = td.assignment1.getTags().asObservableList();
-        List<Task> emptyTasks = Arrays.asList();
-        UserInboxStub newData = new UserInboxStub(emptyTasks, duplicateEvents, newTags);
+        List<Task> emptyEvents = Arrays.asList();
+        UserInboxStub newData = new UserInboxStub(emptyEvents, duplicateEvents, newTags);
 
         thrown.expect(AssertionError.class);
         inbox.resetData(newData);
     }
 
+    //@@author
     @Test
     public void resetData_withDuplicateTags_throwsAssertionError() {
         UserInbox typicalUserInbox = new TypicalTestUserInbox().getTypicalUserInbox();

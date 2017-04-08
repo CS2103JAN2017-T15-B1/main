@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- @@author A0127737X -->
 <?import java.lang.*?>
 <?import java.net.*?>
 <?import javafx.geometry.*?>
@@ -18,6 +17,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
+<!-- @@author A0127737X -->
 <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <GridPane HBox.hgrow="ALWAYS">
@@ -37,9 +37,9 @@
                         <HBox alignment="CENTER_LEFT" spacing="5">
                             <children>
                                 <Label fx:id="id" styleClass="cell_big_label">
-                                  <minWidth>
+                                    <minWidth>
                                       <Region fx:constant="USE_PREF_SIZE" />
-                                </minWidth>
+                                    </minWidth>
                                 </Label>
                                 <ImageView fx:id="overdueIcon" fitHeight="16.0" fitWidth="16.0">
                                     <image>

@@ -12,6 +12,7 @@ import project.taskcrusher.testutil.TestEventCard;
 import project.taskcrusher.testutil.TestTaskCard;
 import project.taskcrusher.testutil.TestUtil;
 
+//@@author A0127737X
 public class AddCommandTest extends TaskcrusherGuiTest {
 
     @Test
@@ -78,7 +79,7 @@ public class AddCommandTest extends TaskcrusherGuiTest {
         TaskCardHandle addedCard = userInboxPanel.navigateToTask(taskToAdd.getName().name);
         assertMatching(taskToAdd, addedCard);
 
-        //confirm the list now contains all previous persons plus the new person
+        //confirm the list now contains all previous tasks plus the new task
         TestTaskCard[] expectedList = TestUtil.addTasksToList(currentList, taskToAdd);
         assertTrue(userInboxPanel.isListMatching(expectedList));
     }
@@ -91,7 +92,7 @@ public class AddCommandTest extends TaskcrusherGuiTest {
         EventCardHandle addedCard = userInboxPanel.navigateToEvent(eventToAdd.getName().name);
         assertMatching(eventToAdd, addedCard);
 
-        //confirm the list now contains all previous persons plus the new person
+        //confirm the list now contains all previous events plus the new event
         TestEventCard[] expectedList = TestUtil.addEventsToList(currentList, eventToAdd);
         assertTrue(userInboxPanel.isListMatching(expectedList));
     }

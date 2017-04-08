@@ -71,14 +71,14 @@ public class DeleteCommandTest extends TaskcrusherGuiTest {
      * @param currentList A copy of the current list of tasks (before deletion).
      */
     private void assertDeleteSuccess(int targetIndexOneIndexed, final TestTaskCard[] currentList) {
-        Arrays.sort(currentList);
+        Arrays.sort(currentList); //sort the array first to match the order of listing in UI
         TestTaskCard taskToDelete = currentList[targetIndexOneIndexed - 1]; // -1 as array uses zero indexing
         TestTaskCard[] expectedRemainder = TestUtil.removeTaskFromList(currentList, targetIndexOneIndexed);
         Arrays.sort(expectedRemainder);
 
         commandBox.runCommand("delete t " + targetIndexOneIndexed);
 
-        //confirm the list now contains all previous persons except the deleted person
+        //confirm the list now contains all previous tasks except the deleted one
         assertTrue(userInboxPanel.isListMatching(expectedRemainder));
 
         //confirm the result message is correct
@@ -91,18 +91,18 @@ public class DeleteCommandTest extends TaskcrusherGuiTest {
      * @param currentList A copy of the current list of events (before deletion).
      */
     private void assertDeleteSuccess(int targetIndexOneIndexed, final TestEventCard[] currentList) {
-        Arrays.sort(currentList);
-        TestEventCard taskToDelete = currentList[targetIndexOneIndexed - 1]; // -1 as array uses zero indexing
+        Arrays.sort(currentList); //sort the array first to match the order of listing in UI
+        TestEventCard eventToDelete = currentList[targetIndexOneIndexed - 1]; // -1 as array uses zero indexing
         TestEventCard[] expectedRemainder = TestUtil.removeEventFromList(currentList, targetIndexOneIndexed);
         Arrays.sort(expectedRemainder);
 
         commandBox.runCommand("delete e " + targetIndexOneIndexed);
 
-        //confirm the list now contains all previous persons except the deleted person
+        //confirm the list now contains all previous events except the deleted one
         assertTrue(userInboxPanel.isListMatching(expectedRemainder));
 
         //confirm the result message is correct
-        assertResultMessage(String.format(MESSAGE_DELETE_EVENT_SUCCESS, taskToDelete));
+        assertResultMessage(String.format(MESSAGE_DELETE_EVENT_SUCCESS, eventToDelete));
     }
 
 }
