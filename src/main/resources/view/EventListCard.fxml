@@ -42,7 +42,6 @@
                                 </image>
                             </ImageView>
                             <Label fx:id="name" text="\$event_name" styleClass="cell_big_label"/>
-                            <Label fx:id="eventLocation" styleClass="cell_big_label" text="\$location" />
                             <Label fx:id="priority" styleClass="priority" text="\$priority" />
                             <FlowPane fx:id="tags" />
                             <ImageView fx:id="tickIcon" fitHeight="25.0" fitWidth="25.0">
@@ -52,7 +51,10 @@
                             </ImageView>
                         </HBox>
                         <FlowPane fx:id="timeslots" styleClass = "timeslots"/>
+                        <HBox spacing="20" alignment="CENTER_LEFT">
+                        <Label fx:id="eventLocation" text="\$location" />
                         <Label fx:id="description" text="\$description" />
+                        </HBox>
                     </children>
                 </VBox>
             </children>

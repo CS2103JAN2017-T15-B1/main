@@ -110,7 +110,12 @@ public class EventListCard extends UiPart<Region> {
 
     private void showLocationIfAny(ReadOnlyEvent event) {
         eventLocation.setText(UiDisplayUtil.getLocationStringForUi(event.getLocation()));
-        eventLocation.setMinWidth(Region.USE_PREF_SIZE);
+        if (event.getLocation().hasLocation()) {
+            eventLocation.setMinWidth(Region.USE_PREF_SIZE);
+        } else {
+            eventLocation.setVisible(false);
+            eventLocation.setManaged(false);
+        }
     }
 
     private void showEventTimeSlots(ReadOnlyEvent event) {

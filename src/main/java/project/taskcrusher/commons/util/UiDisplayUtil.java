@@ -1,7 +1,9 @@
 package project.taskcrusher.commons.util;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import project.taskcrusher.model.event.Location;
 import project.taskcrusher.model.event.Timeslot;
@@ -14,9 +16,11 @@ import project.taskcrusher.model.task.Deadline;
  * for better UI.
  */
 public class UiDisplayUtil {
-    public static final String[] PARSE_PATTERNS = { "yyyy-MM-dd hh:mma", "yyyy-MM-dd", "MM-dd hh:mma", "hh:mma" };
+    public static final String[] PARSE_PATTERNS = { "EEEE MMM dd yyyy hh:mma", "EEEE hh:mma",
+        "EEEE MMM dd hh:mma", "hh:mma" };
     public static final int FORMAT_DATE_ABSOLUTE = 0;
-    public static final int FORMAT_THIS_YEAR = 2;
+    public static final int FORMAT_DATE_THIS_WEEK = 1;
+    public static final int FORMAT_DATE_THIS_YEAR = 2;
     public static final int FORMAT_DATE_RELATIVE = 3;
     public static final String MESSAGE_NO_DEADLINE = "no deadline";
 
@@ -30,16 +34,19 @@ public class UiDisplayUtil {
         }
 
         Date date = deadline.getDate().get();
-        SimpleDateFormat formatter;
-        String prepend = "By ";
+        String deadlineFormat, prepend = "By ";
+
         if (isToday(date)) {
-            formatter = new SimpleDateFormat(PARSE_PATTERNS[FORMAT_DATE_RELATIVE]);
-            prepend = "Today ";
+            deadlineFormat = PARSE_PATTERNS[FORMAT_DATE_RELATIVE];
+            prepend += "Today ";
+        } else if (isThisWeek(date)) {
+            deadlineFormat = PARSE_PATTERNS[FORMAT_DATE_THIS_WEEK];
         } else if (isThisYear(date)) {
-            formatter = new SimpleDateFormat(PARSE_PATTERNS[FORMAT_THIS_YEAR]);
-        } else {
-            formatter = new SimpleDateFormat(PARSE_PATTERNS[FORMAT_DATE_ABSOLUTE]);
+            deadlineFormat = PARSE_PATTERNS[FORMAT_DATE_THIS_YEAR];
+        }  else {
+            deadlineFormat = PARSE_PATTERNS[FORMAT_DATE_ABSOLUTE];
         }
+        SimpleDateFormat formatter = new SimpleDateFormat(deadlineFormat, Locale.ENGLISH);
         return prepend + formatter.format(date);
     }
 
@@ -55,34 +62,53 @@ public class UiDisplayUtil {
         return dateChecker.format(now).equals(dateChecker.format(d));
     }
 
+    private static boolean isThisWeek(Date d) {
+        Calendar currentCalendar = Calendar.getInstance();
+        int week = currentCalendar.get(Calendar.WEEK_OF_YEAR);
+        Calendar targetCalendar = Calendar.getInstance();
+        targetCalendar.setTime(d);
+        int targetWeek = targetCalendar.get(Calendar.WEEK_OF_YEAR);
+        return week == targetWeek;
+    }
+
     /**
      * returns a string representation of the given time slot, with redundant details stripped for display
      */
     public static String renderTimeslotAsStringForUi(Timeslot timeslot) {
         assert timeslot != null;
-        String endFormat, startFormat, prepend = "";
+        String endFormat, startFormat, startPrepend = "", endPrepend = "";
+
+        /////endFormat
         if (isSameDate(timeslot.start, timeslot.end)) {
             endFormat = PARSE_PATTERNS[FORMAT_DATE_RELATIVE];
+        } else if (isToday(timeslot.end)) {
+            endFormat = PARSE_PATTERNS[FORMAT_DATE_RELATIVE];
+            endPrepend += "Today ";
+        } else if (isThisWeek(timeslot.end)) {
+            endFormat = PARSE_PATTERNS[FORMAT_DATE_THIS_WEEK];
+        } else if (isThisYear(timeslot.end)) {
+            endFormat = PARSE_PATTERNS[FORMAT_DATE_THIS_YEAR];
         } else {
             endFormat = PARSE_PATTERNS[FORMAT_DATE_ABSOLUTE];
         }
+
+        /////startFormat
         if (isToday(timeslot.start)) {
             startFormat = PARSE_PATTERNS[FORMAT_DATE_RELATIVE];
-            prepend = "Today ";
+            startPrepend = "Today ";
+        } else if (isThisWeek(timeslot.start)) {
+            startFormat = PARSE_PATTERNS[FORMAT_DATE_THIS_WEEK];
         } else if (isThisYear(timeslot.start)) {
-            startFormat = PARSE_PATTERNS[FORMAT_THIS_YEAR];
-            if (isThisYear(timeslot.end)) {
-                endFormat = PARSE_PATTERNS[FORMAT_THIS_YEAR];
-            }
+            startFormat = PARSE_PATTERNS[FORMAT_DATE_THIS_YEAR];
         } else {
             startFormat = PARSE_PATTERNS[FORMAT_DATE_ABSOLUTE];
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat(startFormat);
-        prepend += sdf.format(timeslot.start) + " to ";
+        SimpleDateFormat sdf = new SimpleDateFormat(startFormat, Locale.ENGLISH);
+        startPrepend += sdf.format(timeslot.start) + " to ";
         sdf.applyPattern(endFormat);
-        prepend += sdf.format(timeslot.end);
-        return prepend;
+        startPrepend += endPrepend + sdf.format(timeslot.end);
+        return startPrepend;
     }
 
     private static boolean isSameDate(Date d1, Date d2) {
