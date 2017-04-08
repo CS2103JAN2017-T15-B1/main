@@ -14,7 +14,7 @@ import project.taskcrusher.model.task.Deadline;
 public class ListCommand extends Command {
 
     public static final String COMMAND_WORD = "list";
-    public static final String COMPLETE_FLAG = "c";
+    public static final String COMPLETE_FLAG = "complete";
     public static final String ALL_FLAG = "all";
     public static final String NO_FLAG = "";
 
@@ -55,7 +55,7 @@ public class ListCommand extends Command {
         if (dateRange != null) {
             model.updateFilteredLists(dateRange);
         } else if (!showActiveOnly && !showCompleteOnly) {
-            model.updateFilteredListsShowAll();
+            model.updateFilteredListsToShowAll();
         } else if (showCompleteOnly) {
             model.updateFilteredListsToShowCompleteToDo();
         } else if (showActiveOnly) {

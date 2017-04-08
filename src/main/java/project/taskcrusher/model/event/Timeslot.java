@@ -1,9 +1,14 @@
 package project.taskcrusher.model.event;
 
+import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.commons.lang.time.DateUtils;
+
+import com.joestelmach.natty.DateGroup;
+
 import project.taskcrusher.commons.exceptions.IllegalValueException;
-import project.taskcrusher.model.shared.DateUtilApache;
+import project.taskcrusher.model.shared.DateUtil;
 
 //@@author A0163962X
 /**
@@ -20,8 +25,8 @@ public class Timeslot implements Comparable<Timeslot> {
     public static final boolean IS_LOADING_FROM_STORAGE = false;
     public static final String NO_TIMESLOT = "";
 
-    public final Date start;
-    public final Date end;
+    public Date start;
+    public Date end;
 
     public static Timeslot constructTimeslotFromEndDate(String end) throws IllegalValueException {
         return new Timeslot(end);
@@ -31,7 +36,7 @@ public class Timeslot implements Comparable<Timeslot> {
         assert end != null;
 
         this.start = new Date();
-        this.end = DateUtilApache.parseDate(end, true);
+        this.end = DateUtil.parseDate(end);
 
         if (!isValidTimeslot(this.start, this.end)) {
             throw new IllegalValueException(MESSAGE_TIMESLOT_RANGE);
@@ -42,25 +47,53 @@ public class Timeslot implements Comparable<Timeslot> {
         assert start != null;
         assert end != null;
 
-        this.start = DateUtilApache.parseDate(start, true);
-        this.end = DateUtilApache.parseDate(end, true);
+        this.start = DateUtil.parseDate(start);
+        DateGroup startInfo = DateUtil.parseDateAsDateGroup(start);
+
+        this.end = DateUtil.parseDate(end);
+        DateGroup endInfo = DateUtil.parseDateAsDateGroup(end);
+
+        // special cases:
+        // handle whole day events
+        if (startInfo.isTimeInferred() && start.compareTo(end) == 0) {
+            this.start = DateUtils.setHours(this.start, 0);
+            this.start = DateUtils.setMinutes(this.start, 0);
+            this.start = DateUtils.setSeconds(this.start, 0);
+            this.start = DateUtils.setMilliseconds(this.start, 0);
+            this.end = DateUtils.setHours(this.end, 23);
+            this.end = DateUtils.setMinutes(this.end, 59);
+            this.end = DateUtils.setSeconds(this.end, 59);
+            this.end = DateUtils.setMilliseconds(this.end, 59);
+            // handle date omission after "to"
+        } else if (endInfo.isDateInferred()) {
+            Date tempDate = (Date) this.start.clone();
+            long secondsFromMidnight = DateUtils.getFragmentInSeconds(this.end, Calendar.DATE);
+            tempDate = DateUtils.setHours(tempDate, 0);
+            tempDate = DateUtils.setMinutes(tempDate, 0);
+            tempDate = DateUtils.setSeconds(tempDate, 0);
+            tempDate = DateUtils.setMilliseconds(tempDate, 0);
+            tempDate = DateUtils.addSeconds(tempDate, (int) secondsFromMidnight);
+            this.end = tempDate;
+        }
 
         if (!isValidTimeslot(this.start, this.end)) {
             throw new IllegalValueException(MESSAGE_TIMESLOT_RANGE);
         }
     }
 
-    public Timeslot(String start, String end, boolean isNew) throws IllegalValueException {
-        assert start != null;
-        assert end != null;
-
-        this.start = DateUtilApache.parseDate(start, isNew);
-        this.end = DateUtilApache.parseDate(end, isNew);
-
-        if (!isValidTimeslot(this.start, this.end, isNew)) {
-            throw new IllegalValueException(MESSAGE_TIMESLOT_RANGE);
-        }
-    }
+    // REMOVED FOR PAST DATES
+    // public Timeslot(String start, String end, boolean isNew) throws
+    // IllegalValueException {
+    // assert start != null;
+    // assert end != null;
+    //
+    // this.start = DateUtilApache.parseDate(start, isNew);
+    // this.end = DateUtilApache.parseDate(end, isNew);
+    //
+    // if (!isValidTimeslot(this.start, this.end, isNew)) {
+    // throw new IllegalValueException(MESSAGE_TIMESLOT_RANGE);
+    // }
+    // }
 
     /**
      * Checks if {@code another} has overlapping timeslot with this Timeslot
@@ -94,20 +127,20 @@ public class Timeslot implements Comparable<Timeslot> {
         }
     }
 
-    private boolean isValidTimeslot(Date start, Date end, boolean isNew) {
-
-        if (!isNew) {
-            return true;
-        } else if (!end.before(start)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    // private boolean isValidTimeslot(Date start, Date end, boolean isNew) {
+    //
+    // if (!isNew) {
+    // return true;
+    // } else if (!end.before(start)) {
+    // return true;
+    // } else {
+    // return false;
+    // }
+    // }
 
     @Override
     public String toString() {
-        return DateUtilApache.dateAsStringForStorage(start) + " to " + DateUtilApache.dateAsStringForStorage(end);
+        return DateUtil.dateAsStringForStorage(start) + " to " + DateUtil.dateAsStringForStorage(end);
     }
 
     @Override

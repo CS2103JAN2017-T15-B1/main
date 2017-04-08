@@ -1,5 +1,7 @@
 package project.taskcrusher.testutil;
 
+import java.util.Date;
+
 import project.taskcrusher.model.shared.Description;
 import project.taskcrusher.model.shared.Name;
 import project.taskcrusher.model.shared.Priority;
@@ -19,7 +21,6 @@ public class TestTaskCard implements ReadOnlyTask {
     private Priority priority;
     private UniqueTagList tags;
     private boolean isComplete;
-    private boolean isOverdue;
 
     public TestTaskCard() {
         tags = new UniqueTagList();
@@ -88,7 +89,7 @@ public class TestTaskCard implements ReadOnlyTask {
 
     public String getAddCommand() {
         StringBuilder sb = new StringBuilder();
-        sb.append("add t " + this.getName().name);
+        sb.append("add t " + this.getName().name + " ");
 
         if (this.getDeadline().hasDeadline()) {
             sb.append("d/" + this.getDeadline().deadline + " ");
@@ -112,13 +113,34 @@ public class TestTaskCard implements ReadOnlyTask {
     }
 
     @Override
-    public int compareTo(ReadOnlyTask o) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int compareTo(ReadOnlyTask another) {
+        if (this.isComplete) {
+            if (another.isComplete()) {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else if (another.isComplete()) {
+            return -1;
+        }
+        //neither is complete
+
+        if (!this.getDeadline().hasDeadline() && !another.getDeadline().hasDeadline()) {
+            return this.getPriority().compareTo(another.getPriority());
+        } else if (!this.getDeadline().hasDeadline() && another.getDeadline().hasDeadline()) {
+            return 1;
+        } else if (this.getDeadline().hasDeadline() && !another.getDeadline().hasDeadline()) {
+            return -1;
+        } else {
+            //both has deadline
+            Date thisDate = this.getDeadline().getDate().get();
+            Date anotherDate = another.getDeadline().getDate().get();
+            return thisDate.compareTo(anotherDate);
+        }
     }
 
     @Override
-    public boolean isOverdue() {
-        return this.isOverdue;
+    public boolean isOverdue(Date timer) {
+        return false;
     }
 }

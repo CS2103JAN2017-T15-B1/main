@@ -33,7 +33,7 @@ public class Parser {
      */
     private static final Pattern BASIC_COMMAND_FORMAT = Pattern.compile("(?<commandWord>\\S+)(?<arguments>.*)");
     public static final String NO_OPTION = "";
-    public static final String FORCE_OPTION = "f";
+    public static final String FORCE_OPTION = "force";
 
     /**
      * Parses user input into command for execution.
@@ -65,11 +65,11 @@ public class Parser {
             return new ConfirmCommandParser().parse(arguments);
 
         case LoadCommand.COMMAND_WORD:
-            return new LoadCommand(arguments.trim());
+            return new LoadCommandParser().parse(arguments);
 
         case MarkCommand.COMMAND_WORD:
             return new MarkCommandParser().parse(arguments);
-        // TODO remove this later on
+
         case ClearCommand.COMMAND_WORD:
             return new ClearCommand();
 

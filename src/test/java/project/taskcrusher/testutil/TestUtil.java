@@ -16,6 +16,7 @@ import org.testfx.api.FxToolkit;
 
 import com.google.common.io.Files;
 
+import guitests.guihandles.EventCardHandle;
 import guitests.guihandles.TaskCardHandle;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -30,6 +31,7 @@ import project.taskcrusher.commons.exceptions.IllegalValueException;
 import project.taskcrusher.commons.util.FileUtil;
 import project.taskcrusher.commons.util.XmlUtil;
 import project.taskcrusher.model.UserInbox;
+import project.taskcrusher.model.event.ReadOnlyEvent;
 import project.taskcrusher.model.shared.Description;
 import project.taskcrusher.model.shared.Name;
 import project.taskcrusher.model.shared.Priority;
@@ -282,7 +284,7 @@ public class TestUtil {
      *            The subset of persons.
      * @return The modified persons after removal of the subset from persons.
      */
-    public static TestTaskCard[] removePersonsFromList(final TestTaskCard[] persons, TestTaskCard... personsToRemove) {
+    public static TestTaskCard[] removeTasksFromList(final TestTaskCard[] persons, TestTaskCard... personsToRemove) {
         List<TestTaskCard> listOfPersons = asList(persons);
         listOfPersons.removeAll(asList(personsToRemove));
         return listOfPersons.toArray(new TestTaskCard[listOfPersons.size()]);
@@ -296,8 +298,36 @@ public class TestUtil {
      * @param targetIndexInOneIndexedFormat
      *            e.g. index 1 if the first element is to be removed
      */
-    public static TestTaskCard[] removePersonFromList(final TestTaskCard[] list, int targetIndexInOneIndexedFormat) {
-        return removePersonsFromList(list, list[targetIndexInOneIndexedFormat - 1]);
+    public static TestTaskCard[] removeTaskFromList(final TestTaskCard[] list, int targetIndexInOneIndexedFormat) {
+        return removeTasksFromList(list, list[targetIndexInOneIndexedFormat - 1]);
+    }
+
+    /**
+     * Removes a subset from the list of persons.
+     *
+     * @param events
+     *            The list of persons
+     * @param eventsToRemove
+     *            The subset of persons.
+     * @return The modified persons after removal of the subset from persons.
+     */
+    public static TestEventCard[] removeEventsFromList(final TestEventCard[] events,
+            TestEventCard... eventsToRemove) {
+        List<TestEventCard> listOfEvents = asList(events);
+        listOfEvents.removeAll(asList(eventsToRemove));
+        return listOfEvents.toArray(new TestEventCard[listOfEvents.size()]);
+    }
+
+    /**
+     * Returns a copy of the list with the person at specified index removed.
+     *
+     * @param list
+     *            original list to copy from
+     * @param targetIndexInOneIndexedFormat
+     *            e.g. index 1 if the first element is to be removed
+     */
+    public static TestEventCard[] removeEventFromList(final TestEventCard[] list, int targetIndexInOneIndexedFormat) {
+        return removeEventsFromList(list, list[targetIndexInOneIndexedFormat - 1]);
     }
 
     /**
@@ -319,16 +349,24 @@ public class TestUtil {
     /**
      * Appends persons to the array of persons.
      *
-     * @param persons
+     * @param tasks
      *            A array of persons.
-     * @param personsToAdd
+     * @param tasksToAdd
      *            The persons that are to be appended behind the original array.
      * @return The modified array of persons.
      */
-    public static TestTaskCard[] addPersonsToList(final TestTaskCard[] persons, TestTaskCard... personsToAdd) {
-        List<TestTaskCard> listOfPersons = asList(persons);
-        listOfPersons.addAll(asList(personsToAdd));
-        return listOfPersons.toArray(new TestTaskCard[listOfPersons.size()]);
+    public static TestTaskCard[] addTasksToList(final TestTaskCard[] tasks, TestTaskCard... tasksToAdd) {
+        List<TestTaskCard> listOfTasks = asList(tasks);
+        listOfTasks.addAll(asList(tasksToAdd));
+        listOfTasks.sort(null);
+        return listOfTasks.toArray(new TestTaskCard[listOfTasks.size()]);
+    }
+
+    public static TestEventCard[] addEventsToList(final TestEventCard[] events, TestEventCard... eventsToAdd) {
+        List<TestEventCard> listOfEvents = asList(events);
+        listOfEvents.addAll(asList(eventsToAdd));
+        listOfEvents.sort(null);
+        return listOfEvents.toArray(new TestEventCard[listOfEvents.size()]);
     }
 
     private static <T> List<T> asList(T[] objs) {
@@ -339,11 +377,18 @@ public class TestUtil {
         return list;
     }
 
-    public static boolean compareCardAndPerson(TaskCardHandle card, ReadOnlyTask person) {
+    public static boolean compareTaskCardAndTask(TaskCardHandle card, ReadOnlyTask task) {
         if (card == null) {
             assert false;
         }
-        return card.isSameTask(person);
+        return card.isSameTask(task);
+    }
+
+    public static boolean compareEventCardAndEvent(EventCardHandle card, ReadOnlyEvent event) {
+        if (card == null) {
+            assert false;
+        }
+        return card.isSameEvent(event);
     }
 
     public static Tag[] getTagList(String tags) {

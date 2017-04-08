@@ -41,8 +41,6 @@ public interface Model {
 
     void signalUiForUpdatedLists();
 
-    void updateOverdueStatus();
-
     // ========== for tasks =================================================
     /** Deletes the given task. */
     void deleteTask(ReadOnlyTask target) throws UniqueTaskList.TaskNotFoundException;
@@ -113,7 +111,7 @@ public interface Model {
      */
     void confirmEventTime(int filteredEventListIndex, int timeslotIndex);
 
-    void updateFilteredListsShowAll();
+    void updateFilteredListsToShowAll();
 
     void updateFilteredListsToShowActiveToDo();
 

@@ -20,16 +20,19 @@ import project.taskcrusher.model.task.UniqueTaskList;
  */
 public class TypicalTestUserInbox {
 
-    public TestTaskCard assignment, payment, shopping, phoneCall, application;
+    public TestTaskCard assignment1, assignment2, payment, shopping, phoneCall, application;
     public TestTaskCard notAddedBuyTicket, notAddedYetQuiz;
-    public TestEventCard guitarLesson, islandTrip, fixRoof;
+    public TestEventCard guitarLesson, islandTrip, fixRoof, birthdayParty;
     public TestEventCard notAddedYetTownFestival, notAddedYetCheckSamples;
 
     public TypicalTestUserInbox() {
         try {
             //==================== Sample tasks ======================
-            assignment = new TaskBuilder().withName("CS2103 assignment")
+            assignment1 = new TaskBuilder().withName("CS2103 assignment")
                     .withDescription(Description.NO_DESCRIPTION).withDeadline("18-6-2020").withPriority("3")
+                    .withTags("school").build();
+            assignment2 = new TaskBuilder().withName("CS9999 assignment")
+                    .withDescription("very very hard").withDeadline("18-6-2018").withPriority("3")
                     .withTags("school").build();
             payment = new TaskBuilder().withName("pay tuition fee").withDescription("Set up bank account")
                     .withDeadline("tomorrow").withPriority("3")
@@ -43,18 +46,23 @@ public class TypicalTestUserInbox {
             notAddedBuyTicket = new TaskBuilder().withName("Buy Ticket for UEFA").withPriority("3")
                     .withDeadline("next Tuesday").withDescription("In Portugal").build();
             notAddedYetQuiz = new TaskBuilder().withName("Post lecture quiz").withPriority("2")
-                    .withDeadline("2018 March 3").withDescription("CS2103").build();
+                    .withDeadline("next Tuesday").withDescription("CS2103").build();
 
             //==================== Sample events =====================
             guitarLesson = new EventBuilder().withName("Guitar lesson").withPriority("0").withDescription("concert")
                     .withLocation("NUS").withTimeslots(constructTimeslotList(new Timeslot("2017-10-12", "2017-10-15")))
                     .build();
-            islandTrip = new EventBuilder().withName("Island trip").withPriority("3").withDescription("Mr XYZ")
+            islandTrip = new EventBuilder().withName("Island trip").withPriority("3")
+                    .withDescription("do assignment first though")
                     .withTimeslots(constructTimeslotList(new Timeslot("2017-10-12", "2017-10-15")))
                     .withLocation("Carribean").build();
             fixRoof = new EventBuilder().withName("Fix roof").withPriority("2").withDescription("brand audit")
                     .withLocation("home").withTimeslots(constructTimeslotList(new Timeslot("2017-11-19", "2017-11-20")))
                             .build();
+            birthdayParty = new EventBuilder().withName("Birthday party").withPriority("2")
+                    .withDescription("who is coming").withLocation("TBC")
+                    .withTimeslots(constructTimeslotList(new Timeslot("2017-12-24 10am", "2017-12-24 2pm")))
+                    .build();
             notAddedYetTownFestival = new EventBuilder().withName("Town festival").withPriority("1").withDescription("")
                     .withLocation("Downtown").
                     withTimeslots(constructTimeslotList(new Timeslot("2018-03-20", "2018-03-31"))).build();
@@ -89,11 +97,11 @@ public class TypicalTestUserInbox {
     }
 
     public TestTaskCard[] getTypicalTasks() {
-        return new TestTaskCard[]{assignment, payment, shopping, phoneCall, application};
+        return new TestTaskCard[]{assignment1, assignment2, payment, shopping, phoneCall, application};
     }
 
     public TestEventCard[] getTypicalEvents() {
-        return new TestEventCard[]{guitarLesson, fixRoof, islandTrip};
+        return new TestEventCard[]{guitarLesson, fixRoof, islandTrip, birthdayParty};
     }
 
     public UserInbox getTypicalUserInbox() {

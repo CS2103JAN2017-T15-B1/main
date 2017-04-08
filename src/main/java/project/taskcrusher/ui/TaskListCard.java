@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import project.taskcrusher.model.shared.DateUtilApache;
+import project.taskcrusher.commons.util.UiDisplayUtil;
 import project.taskcrusher.model.task.ReadOnlyTask;
 
 //@@author A0127737X
@@ -16,9 +16,6 @@ import project.taskcrusher.model.task.ReadOnlyTask;
 public class TaskListCard extends UiPart<Region> {
 
     private static final String FXML = "TaskListCard.fxml";
-    private static final String MESSAGE_NO_DEADLINE = "no deadline";
-    private static final String MESSAGE_DEADLINE_BY = "By ";
-    private static final String OVERDUE_STYLE_CLASS = "overdue";
 
     @FXML
     private HBox cardPane;
@@ -39,28 +36,32 @@ public class TaskListCard extends UiPart<Region> {
     @FXML
     private ImageView overdueIcon;
 
-    public TaskListCard(ReadOnlyTask task, int displayedIndex) {
+    public TaskListCard(ReadOnlyTask task, int displayedIndex, boolean isOverdue) {
         super(FXML);
-        name.setText(task.getName().toString());
-        name.setMinWidth(Region.USE_PREF_SIZE);
-        id.setText(displayedIndex + ". ");
+        showIdAndName(task, displayedIndex);
         showDeadline(task);
         showPriority(task);
         showDescription(task);
-        displayComplete(task);
-        displayOverdueStatusIfAny(task);
+        displayCompleteTickIfApplicable(task);
+        displayOverdueStatusIfApplicable(task, isOverdue);
 
         initTags(task);
     }
 
-    private void displayComplete(ReadOnlyTask task) {
+    private void showIdAndName(ReadOnlyTask task, int displayedIndex) {
+        name.setText(task.getName().name);
+        name.setMinWidth(Region.USE_PREF_SIZE);
+        id.setText(displayedIndex + ". ");
+    }
+
+    private void displayCompleteTickIfApplicable(ReadOnlyTask task) {
         if (!task.isComplete()) {
             tickIcon.setVisible(false);
         }
     }
 
-    private void displayOverdueStatusIfAny(ReadOnlyTask task) {
-        if (task.isOverdue()) {
+    private void displayOverdueStatusIfApplicable(ReadOnlyTask task, boolean isOverdue) {
+        if (!task.isComplete() && isOverdue) {
             overdueIcon.setVisible(true);
             overdueIcon.setManaged(true);
             deadline.setStyle("-fx-text-fill: red"); //should not be done this way
@@ -71,8 +72,8 @@ public class TaskListCard extends UiPart<Region> {
     }
 
     private void showDescription(ReadOnlyTask task) {
+        description.setText(task.getDescription().toString()); //still set the text even if empty for GuiTest
         if (task.getDescription().hasDescription()) {
-            description.setText(task.getDescription().toString());
             description.setMinWidth(Region.USE_PREF_SIZE);
         } else {
             description.setVisible(false);;
@@ -80,7 +81,7 @@ public class TaskListCard extends UiPart<Region> {
     }
 
     private void showPriority(ReadOnlyTask task) {
-        priority.setText("p=" + task.getPriority().priority);
+        priority.setText(UiDisplayUtil.priorityForUi(task.getPriority()));
         switch (task.getPriority().priority) {
         case "1":
             priority.getStyleClass().add("priority-one");
@@ -99,12 +100,7 @@ public class TaskListCard extends UiPart<Region> {
     }
 
     private void showDeadline(ReadOnlyTask task) {
-        if (task.getDeadline().hasDeadline()) {
-            deadline.setText(MESSAGE_DEADLINE_BY +
-                    DateUtilApache.deadlineAsStringForUi(task.getDeadline().getDate().get()));
-        } else {
-            deadline.setText(MESSAGE_NO_DEADLINE);
-        }
+        deadline.setText(UiDisplayUtil.deadlineForUi(task.getDeadline()));
         deadline.setMinWidth(Region.USE_PREF_SIZE);
     }
 

@@ -1,10 +1,10 @@
 package project.taskcrusher.ui;
 
+import java.util.Date;
 import java.util.logging.Logger;
 
 import com.google.common.eventbus.Subscribe;
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -15,18 +15,22 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import project.taskcrusher.commons.core.LogsCenter;
 import project.taskcrusher.commons.events.model.ListsToShowUpdatedEvent;
+import project.taskcrusher.commons.events.model.TimerToUpdateEvent;
 import project.taskcrusher.commons.util.FxViewUtil;
 import project.taskcrusher.model.event.ReadOnlyEvent;
 import project.taskcrusher.model.task.ReadOnlyTask;
 
+//@@author A0127737X
 /**
- * Panel containing the active list.
+ * Panel containing the eventList and taskList.
  */
 public class UserInboxPanel extends UiPart<Region> {
     private final Logger logger = LogsCenter.getLogger(UserInboxPanel.class);
     private static final String FXML = "UserInboxPanel.fxml";
     private static final boolean SET_LIST_VISIBLE = true;
     private static final boolean SET_LIST_HIDDEN = false;
+    private static final String MESSAGE_NO_ITEM_TO_SHOW = "Nothing to show!";
+    private Date timer;
 
     @FXML
     private ListView<ReadOnlyTask> taskListView;
@@ -40,6 +44,7 @@ public class UserInboxPanel extends UiPart<Region> {
     public UserInboxPanel(AnchorPane userInboxPlaceholder, ObservableList<ReadOnlyTask> taskList,
             ObservableList<ReadOnlyEvent> eventList) {
         super(FXML);
+        timer = new Date();
         setConnections(taskList, eventList);
         addToPlaceholder(userInboxPlaceholder);
         registerAsAnEventHandler(this);
@@ -58,13 +63,6 @@ public class UserInboxPanel extends UiPart<Region> {
         placeHolderPane.getChildren().add(getRoot());
     }
 
-    public void scrollTo(int index) {
-        Platform.runLater(() -> {
-            taskListView.scrollTo(index);
-            taskListView.getSelectionModel().clearAndSelect(index);
-        });
-    }
-
     class TaskListViewCell extends ListCell<ReadOnlyTask> {
 
         @Override
@@ -75,7 +73,7 @@ public class UserInboxPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new TaskListCard(task, getIndex() + 1).getRoot());
+                setGraphic(new TaskListCard(task, getIndex() + 1, task.isOverdue(timer)).getRoot());
             }
         }
     }
@@ -90,18 +88,17 @@ public class UserInboxPanel extends UiPart<Region> {
                 setGraphic(null);
                 setText(null);
             } else {
-                setGraphic(new EventListCard(event, getIndex() + 1).getRoot());
+                setGraphic(new EventListCard(event, getIndex() + 1, event.isOverdue(timer)).getRoot());
             }
         }
     }
 
-    //@@author A0127737X
     @Subscribe
     public void handleListsToShowUpdatedEvent(ListsToShowUpdatedEvent event) {
         logger.info(LogsCenter.getEventHandlingLogMessage(event));
         if (event.eventCount == 0) {
             eventListView.setVisible(SET_LIST_HIDDEN);
-            eventHeader.setText("Events: Nothing to Show!");
+            eventHeader.setText("Events: " + MESSAGE_NO_ITEM_TO_SHOW);
         } else {
             eventListView.setVisible(SET_LIST_VISIBLE);
             eventHeader.setText("Events: " + event.eventCount + " listed");
@@ -109,11 +106,18 @@ public class UserInboxPanel extends UiPart<Region> {
 
         if (event.taskCount == 0) {
             taskListView.setVisible(SET_LIST_HIDDEN);
-            taskHeader.setText("Tasks: Nothing to Show!");
+            taskHeader.setText("Tasks: " + MESSAGE_NO_ITEM_TO_SHOW);
         } else {
             taskListView.setVisible(SET_LIST_VISIBLE);
             taskHeader.setText("Tasks: " + event.taskCount + " listed");
         }
+    }
+
+    @Subscribe
+    public void handleTimerToUpdateEvent(TimerToUpdateEvent event) {
+        logger.info(LogsCenter.getEventHandlingLogMessage(event));
+        logger.info("Updated timer now at " + timer.toString());
+        this.timer = new Date();
     }
 
 }
