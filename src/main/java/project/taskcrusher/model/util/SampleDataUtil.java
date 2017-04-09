@@ -90,7 +90,6 @@ public class SampleDataUtil {
                 new Task(new Name("comp2012 assignment"), new Deadline("Tomorrow"), new Priority("3"),
                         new Description("submit assignment"), new UniqueTagList("school")),
                 };
-            
         } catch (IllegalValueException e) {
             throw new AssertionError("sample data cannot be invalid", e);
         }

@@ -43,7 +43,6 @@ public class RedoCommandTest extends TaskcrusherGuiTest {
 		commandBox.runCommand("delete t 1");
 		commandBox.runCommand("redo");
 		assertResultMessage(RedoCommand.MESSAGE_FAILURE);
-
 		// redo clear command
 		commandBox.runCommand("clear");
 		commandBox.runCommand("undo");

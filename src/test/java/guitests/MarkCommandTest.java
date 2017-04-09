@@ -1,15 +1,13 @@
 package guitests;
 
-
+//@@author A0163639W
 
 import org.junit.Test;
-
 
 import project.taskcrusher.commons.core.Messages;
 import project.taskcrusher.logic.commands.MarkCommand;
 import project.taskcrusher.testutil.TestEventCard;
 import project.taskcrusher.testutil.TestTaskCard;
-
 
 public class MarkCommandTest extends TaskcrusherGuiTest {
 
