@@ -6,8 +6,14 @@ We are a team based in the [School of Computing, National University of Singapor
 
 #### [Yoshiaki Nishimura](http://github.com/yoshi-1224)
 <img src="images/yoshi-1224.jpg" width="150"><br>
-**Role**: Team lead, in charge of UI & Model <br>
-**Responsibilities**: Documentation, Deliverables and deadlines, Scheduling and tracking, Testing, Travis, Git
+* **Role**: Team lead, developer
+
+* **Components in charge of**: [Model component](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/DeveloperGuide.md#24-model-component), [UI component](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/DeveloperGuide.md#22-ui-component) <br>
+
+* **Aspects/tools in charge of**: Documentation, Deliverables and deadlines, Scheduling and tracking, Testing, Travis, Git, Javafx
+* Features implemented:
+* Code written: [functional code](../collated/main/A0127737X.md), [test code](../collated/test/A0127737X.md)
+* Other major contributions: troubleshooting of Travis and Eclipse, Gui testing, initial refactoring
 
 -----
 

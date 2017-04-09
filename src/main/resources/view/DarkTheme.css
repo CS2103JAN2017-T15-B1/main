@@ -297,7 +297,7 @@
 /*padding added to align tags vertically with the name */
 #tags {
     -fx-hgap: 7;
-    -fx-vgap: 0;
+    -fx-vgap: 2;
     -fx-padding: 3 0 0 0;
 }
 
