@@ -75,17 +75,21 @@ By : `Team T15B1`  &nbsp;&nbsp;&nbsp;&nbsp; Since: `Feb 2017`  &nbsp;&nbsp;&nbsp
 
 ## 2. Design
 
-### 2.0. Terminology (some extracts from Glossary)
+### 2.0. Terminology (some extracts from [Appendix D: Glossary](#appendix-d-glossary))
 
 Author: Yoshi Nishimura
 
-Term | Definition
----------------| :--------------------------------------------------------------------
-Event | An event is a type of to-do that is bound to specific time slot and location
-Active Event | An active event is an event that is yet to be marked as complete by the user
-Task | A task is a type of to-do that is to be done by a deadline, which may or may not be specified
-Active Task | An active task is a task that is yet to be marked as complete by the user
-User inbox | The user inbox contains lists of all the events and all the tasks (active lists)
+#### Task
+> A task is to be completed by some deadline. If a task does not have a deadline, then it is considered to be "done someday".
+
+#### Event
+> An event takes place during a specific time slot, which may or may not extend over one or more days. When there are more than one time slot assigned, it is considered tentative.
+
+#### Active task or event
+> An active task or event is one that is yet to be marked as `completed` by the user.
+
+#### User inbox
+> The user inbox contains the lists of all the events and all the tasks, complete or incomplete
 
 ### 2.1. Architecture
 
@@ -258,6 +262,16 @@ The `Storage` component,
 * can save `UserPref` objects in json format and read it back.
 * can save the `UserInbox` data in xml format and read it back.
 * gets notified of the changes in model by `UserInboxChangedEvent` posted by the `Model` each time it updates the data upon executing add, delete or edit. This way, the coupling between `Storage` and `Model` is reduced.
+
+## Undo and Redo Command
+
+Author: Anshul Aggarwal
+
+The Undo and redo command works on the logic of stack whereby the state of each undoable command is stored or pushed in the stack every time it is implemented. Whenever the Undo command is called the recently existing state is popped out and the state is reset accordingly. At this time the previous state of Undo stack is pushed into the redo stack and the same is popped whenever redo command is called. So these commands use the stack push and pop feature to implement the Undo and redo commands on multiple levels. Similarly, it can be done using a list where you can store the states in the list and adjust the index to reach the required state but the logic remains same whereby we make a copy of the state and store it.
+
+**Alternate Implementation**
+
+Another way to implement Undo and redo is by creating a list of integers whereby you recognise the undoable commands by a number and perform your actions based on it whenever undo or redo is called. We need to make 2 more lists for instance Added and Deleted in addition to the event and task list. Whenever Undo is called for the undoing a command say delete then it would move the task from deleted to added and task list and on addition it would delete from added list and task list and subsequently add it to the deleted list. The benefit of this implementation is that you are adding or deleting onto the new list only when undo is called so it is more memory efficient. However, it is cumbersome to manage the implementation when you do it for different type of commands like clear,mark as you need to identify them by an integer and do the necessary which increases the code length and complexity.
 
 ### 2.6. Common classes
 
