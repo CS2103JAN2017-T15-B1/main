@@ -59,7 +59,7 @@ public class EventListCard extends UiPart<Region> {
 
     private void showName(ReadOnlyEvent event) {
         name.setText(event.getName().name);
-        name.setMinWidth(Region.USE_PREF_SIZE);
+//        name.setMinWidth(Region.USE_PREF_SIZE);
     }
 
     private void showCompleteStatusIfApplicable(ReadOnlyEvent event) {
@@ -83,9 +83,7 @@ public class EventListCard extends UiPart<Region> {
 
     private void showDescription(ReadOnlyEvent event) {
         description.setText(event.getDescription().description);
-        if (event.getDescription().hasDescription()) {
-            description.setMinWidth(Region.USE_PREF_SIZE);
-        } else {
+        if (!event.getDescription().hasDescription()) {
             description.setVisible(false);
         }
     }

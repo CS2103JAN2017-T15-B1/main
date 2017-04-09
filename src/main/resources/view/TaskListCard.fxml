@@ -46,7 +46,7 @@
                                         <Image url = "images/overdue.png" ></Image>
                                     </image>
                                 </ImageView>
-                                <Label fx:id="name" styleClass="cell_big_label" text="\$first" />
+                                <Label fx:id="name" wrapText="true" styleClass="cell_big_label" text="\$first" />
                                 <Label fx:id="priority" styleClass="priority" text="\$priority" />
                                 <FlowPane fx:id="tags" />
                                 <ImageView fx:id="tickIcon" fitHeight="25.0" fitWidth="25.0">
@@ -57,7 +57,7 @@
                             </children>
                         </HBox>
                         <Label fx:id="deadline" text="\$deadline" />
-                        <Label fx:id="description" text="\$description" />
+                        <Label fx:id="description" wrapText="true" text="\$description" />
                     </children>
                 </VBox>
             </children>

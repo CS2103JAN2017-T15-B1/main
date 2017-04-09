@@ -321,6 +321,7 @@
 #name {
     -fx-padding: 0 10 0 5;
     -fx-min-width: 300px;
+    -fx-max-width: 300px;
 }
 
 #timeslots {
@@ -376,3 +377,4 @@
 #taskListView, #eventListView {
     -fx-min-width: 400px;
 }
+

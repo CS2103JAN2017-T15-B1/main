@@ -55,7 +55,7 @@ public class TaskListCard extends UiPart<Region> {
 
     private void showName(ReadOnlyTask task) {
         name.setText(task.getName().name);
-        name.setMinWidth(Region.USE_PREF_SIZE);
+//        name.setMinWidth(Region.USE_PREF_SIZE);
     }
 
     private void showCompleteTickIfApplicable(ReadOnlyTask task) {
@@ -77,9 +77,7 @@ public class TaskListCard extends UiPart<Region> {
 
     private void showDescriptionIfAny(ReadOnlyTask task) {
         description.setText(task.getDescription().toString()); //still set the text even if empty for GuiTest
-        if (task.getDescription().hasDescription()) {
-            description.setMinWidth(Region.USE_PREF_SIZE);
-        } else {
+        if (!task.getDescription().hasDescription()) {
             description.setVisible(false);;
         }
     }
