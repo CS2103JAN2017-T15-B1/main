@@ -180,7 +180,7 @@ The `UI` component,
 - The visibility of these two lists will be altered according to the command entered. More specifically, when the lists are filtered following a user command, say `find assignment`, if none of the active events match the keyword `assignment`, the visibility of `eventList` shall be set to `false` and thus be hidden from the UI. This is accomplished by `Model` raising `filteredListsUpdatedEvent`, which contains information about the number of tasks and number of events to be listed.`UserInboxPanel` listens to and handles this event to determine whether the filtered lists are empty or not and thus to adjust the visibility accordingly.
 
 #### 2.2.2 Display of overdue status
-- `UserInboxPanel` has a `Date` object which is used as a timer to check against the deadlines and time slots of active tasks and events. 
+- `UserInboxPanel` has a `Date` object which is used as a timer to check against the deadlines and time slots of active tasks and events.
 - More specifically, the constructors of both `TaskListCard` and `EventListCard` takes in a boolean field `isOverdue` which indicates whether or not this active task or event should display the overdue status. This boolean value is computed using `isOverdue(Date timer)` method of `Task` and `Event` class, where the argument `timer` belongs to `UserInboxPanel`.
 - This timer is updated through `handleTimerToUpdateEvent()` method, where the `TimerToUpdateEvent` is raised by `CommandBox` whenever the user enters a command. This approach reduces the direct coupling between the UI components, and makes sure that the status of tasks and events shown to the user is as accurate as possible.
 
@@ -195,10 +195,19 @@ _Figure 2.3.1 : Structure of the Logic Component_
 
 1. `Logic` uses the `Parser` class to parse the user command.
 2. `Parser` calls the appropriate parser for the identified command, e.g. `AddCommandParser` and `DeleteCommandParser`
-3. The command parser creates the appropriate task or event version of the command, e.g. `AddTaskCommand` and `AddEventCommand`
+3. The command parser creates the appropriate command, e.g. `AddCommand` or `ListCommand`
 4. This `Command` object is executed by the `LogicManager`.
 5. The command execution can affect the `Model` (e.g. editing a task) and/or raise events.
 6. The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `Ui`.
+
+#### 2.3.1 Date Parsing
+- Each individual date given in a command is parsed by `DateUtil`, which relies on ApacheCommons DateUtils and Natty Time Parser in order to produce Java Date objects
+- Specifically, Natty provides nlp for dates, and DateUtils is used for date manipulation.
+- Both Natty and DateUtils are necessary to construct timeslots where one or more date/time elements are omitted for ease of entry.
+
+#### 2.3.2 Task and Event Variants
+- Tasks and events are passed to the same type of command, but the command may call different model methods when executed based on whether a task or event is operated on
+- For example, when executed AddCommand() is able to add either a task or a command, but calls addTask() and addEvent(), respectively.
 
 Given below is the Sequence Diagram for interactions within the `Logic` component for the `execute("delete t 1")`
  API call.<br>
