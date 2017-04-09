@@ -180,7 +180,7 @@ The `UI` component,
 - The visibility of these two lists will be altered according to the command entered. More specifically, when the lists are filtered following a user command, say `find assignment`, if none of the active events match the keyword `assignment`, the visibility of `eventList` shall be set to `false` and thus be hidden from the UI. This is accomplished by `Model` raising `filteredListsUpdatedEvent`, which contains information about the number of tasks and number of events to be listed.`UserInboxPanel` listens to and handles this event to determine whether the filtered lists are empty or not and thus to adjust the visibility accordingly.
 
 #### 2.2.2 Display of overdue status
-- `UserInboxPanel` has a `Date` object which is used as a timer to check against the deadlines and time slots of active tasks and events. 
+- `UserInboxPanel` has a `Date` object which is used as a timer to check against the deadlines and time slots of active tasks and events.
 - More specifically, the constructors of both `TaskListCard` and `EventListCard` takes in a boolean field `isOverdue` which indicates whether or not this active task or event should display the overdue status. This boolean value is computed using `isOverdue(Date timer)` method of `Task` and `Event` class, where the argument `timer` belongs to `UserInboxPanel`.
 - This timer is updated through `handleTimerToUpdateEvent()` method, where the `TimerToUpdateEvent` is raised by `CommandBox` whenever the user enters a command. This approach reduces the direct coupling between the UI components, and makes sure that the status of tasks and events shown to the user is as accurate as possible.
 
@@ -202,7 +202,7 @@ _Figure 2.3.1 : Structure of the Logic Component_
 
 #### 2.3.1 Date Parsing
 - Each individual date given in a command is parsed by `DateUtil`, which relies on ApacheCommons DateUtils and Natty Time Parser in order to produce Java Date objects
-- Specifically, Natty provides nlp for dates, and DateUtils is used for date manipulation. 
+- Specifically, Natty provides nlp for dates, and DateUtils is used for date manipulation.
 - Both Natty and DateUtils are necessary to construct timeslots where one or more date/time elements are omitted for ease of entry.
 
 #### 2.3.2 Task and Event Variants
