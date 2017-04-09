@@ -17,6 +17,7 @@ import project.taskcrusher.model.tag.UniqueTagList;
 import project.taskcrusher.model.task.Deadline;
 import project.taskcrusher.model.task.Task;
 import project.taskcrusher.model.task.UniqueTaskList.DuplicateTaskException;
+
 //@@author A0163639W
 public class SampleDataUtil {
     public static Task[] getSampleTasks() {
@@ -47,8 +48,8 @@ public class SampleDataUtil {
                         new Description("india wc final"), new UniqueTagList("home")),
                 new Task(new Name("maths project"), new Deadline("may 20"), new Priority("1"),
                         new Description("submit assignment"), new UniqueTagList("school")),
-                new Task(new Name("Shopping"), new Deadline("Today"), new Priority("1"),
-                        new Description("ikea"), new UniqueTagList("home")),
+                new Task(new Name("Shopping"), new Deadline("Today"), new Priority("1"), new Description("ikea"),
+                        new UniqueTagList("home")),
                 new Task(new Name("Repair watch"), new Deadline("Tomorrow"), new Priority("3"),
                         new Description("swatch"), new UniqueTagList("home")),
                 new Task(new Name("Physics hw"), new Deadline("Next week"), new Priority("3"),
@@ -88,8 +89,7 @@ public class SampleDataUtil {
                 new Task(new Name("comp3711 assignment"), new Deadline("01-02-1999"), new Priority("3"),
                         new Description("submit assignment"), new UniqueTagList("school")),
                 new Task(new Name("comp2012 assignment"), new Deadline("Tomorrow"), new Priority("3"),
-                        new Description("submit assignment"), new UniqueTagList("school")),
-                };
+                        new Description("submit assignment"), new UniqueTagList("school")), };
         } catch (IllegalValueException e) {
             throw new AssertionError("sample data cannot be invalid", e);
         }
@@ -102,9 +102,8 @@ public class SampleDataUtil {
                         constructTimeslotList(new Timeslot("2017-11-11", "2017-11-12")), new Priority("1"),
                         new Location("NUS"), new Description("presentation"), new UniqueTagList("school")),
                 new Event(new Name("Town festival"),
-                        constructTimeslotList(new Timeslot("2018-03-20", "2018-03-31")),
-                        new Priority("0"), new Location("Iloilo"),
-                        new Description("submit assignment"), new UniqueTagList("school")),
+                        constructTimeslotList(new Timeslot("2018-03-20", "2018-03-31")), new Priority("0"),
+                        new Location("Iloilo"), new Description("submit assignment"), new UniqueTagList("school")),
 
                 new Event(new Name("Party planning"),
                         constructTimeslotList(new Timeslot("2017-12-11 03:00PM", "2017-12-11 05:00PM")),
@@ -115,52 +114,51 @@ public class SampleDataUtil {
                         new UniqueTagList("school")),
                 new Event(new Name("Check samples"),
                         constructTimeslotListTentative(new Timeslot("2019-11-11 02:00PM", "2019-11-11 05:00PM"),
-                                new Timeslot("2019-11-11 06:00PM", "2019-11-11 07:00PM")), new Priority("0"),
-                        new Location("Dexters laboratory"), new Description("nuclear deal"),
+                                new Timeslot("2019-11-11 06:00PM", "2019-11-11 07:00PM")),
+                        new Priority("0"), new Location("Dexters laboratory"), new Description("nuclear deal"),
                         new UniqueTagList("office")),
                 new Event(new Name("Island trip"), constructTimeslotList(new Timeslot("2017-10-12", "2017-10-15")),
                         new Priority("3"), new Location("Middle of nowhere"), new Description("Mr XYZ"),
-                        new UniqueTagList("Home")) ,
-            new Event(new Name("Meeting with xi"),
-                    constructTimeslotList(new Timeslot("2017-11-11 1300", "2017-11-12")), new Priority("1"),
-                    new Location("China"), new Description("presentation"), new UniqueTagList("school")),
-            new Event(new Name("Calculus"),
-                    constructTimeslotList(new Timeslot("2018-03-20 1400", "2018-03-21")),
-                    new Priority("0"), new Location("Maths lab"),
-                    new Description("submit assignment"), new UniqueTagList("school")),
+                        new UniqueTagList("Home")),
+                new Event(new Name("Meeting with xi"),
+                        constructTimeslotList(new Timeslot("2017-11-11 1300", "2017-11-12")), new Priority("1"),
+                        new Location("China"), new Description("presentation"), new UniqueTagList("school")),
+                new Event(new Name("Calculus"),
+                        constructTimeslotList(new Timeslot("2018-03-20 1400", "2018-03-21")), new Priority("0"),
+                        new Location("Maths lab"), new Description("submit assignment"),
+                        new UniqueTagList("school")),
 
-            new Event(new Name("Syria bombing"),
-                    constructTimeslotList(new Timeslot("2017-12-11 03:00PM", " 05:00PM")),
-                    new Priority("2"), new Location("Air base"), new Description("Kill them"),
-                    new UniqueTagList("school")),
-            new Event(new Name("ISIS party"), constructTimeslotList(new Timeslot("2017-11-19 1300", "2017-11-22")),
-                    new Priority("0"), new Location("syria"), new Description("Boom"),
-                    new UniqueTagList("school")),
-            new Event(new Name("Music concert"),
-                    constructTimeslotListTentative(new Timeslot("2019-11-11 02:00PM","1700"),
-                            new Timeslot("2019-11-13 06:00PM", "2019-11-18 07:00PM")), new Priority("0"),
-                    new Location("US"), new Description("Jazz "),
-                    new UniqueTagList("Home")),
-            new Event(new Name("KIm Jong Un Birthday bash"), constructTimeslotList(new Timeslot("2017-10-13", "2017-10-17")),
-                    new Priority("3"), new Location("North korea"), new Description("Nukes"),
-                    new UniqueTagList("Office")),
+                new Event(new Name("Syria bombing"),
+                        constructTimeslotList(new Timeslot("2017-12-11 03:00PM", " 05:00PM")), new Priority("2"),
+                        new Location("Air base"), new Description("Kill them"), new UniqueTagList("school")),
+                new Event(new Name("ISIS party"),
+                        constructTimeslotList(new Timeslot("2017-11-19 1300", "2017-11-22")), new Priority("0"),
+                        new Location("syria"), new Description("Boom"), new UniqueTagList("school")),
+                new Event(new Name("Music concert"),
+                        constructTimeslotListTentative(new Timeslot("2019-11-11 02:00PM", "1700"),
+                                new Timeslot("2019-11-13 06:00PM", "2019-11-18 07:00PM")),
+                        new Priority("0"), new Location("US"), new Description("Jazz "), new UniqueTagList("Home")),
+                new Event(new Name("KIm Jong Un Birthday bash"),
+                        constructTimeslotList(new Timeslot("2017-10-13", "2017-10-17")), new Priority("3"),
+                        new Location("North korea"), new Description("Nukes"), new UniqueTagList("Office")),
 
-            new Event(new Name("Putin party"),
-                    constructTimeslotList(new Timeslot("2017-12-14 03:00PM", " 05:00PM")),
-                    new Priority("2"), new Location("Pittsburg"), new Description("WW3"),
-                    new UniqueTagList("office")),
-            new Event(new Name("Communist party meeting"), constructTimeslotList(new Timeslot("2017-11-19 ", "2017-11-22")),
-                    new Priority("0"), new Location("South China Sea"), new Description("Nuclear war"),
-                    new UniqueTagList("school")),
-            new Event(new Name("Cricket game"),
-                    constructTimeslotListTentative(new Timeslot("2019-11-12 02:00PM","1800"),
-                            new Timeslot("2019-11-17 03:00PM", "2019-11-18 07:00PM")), new Priority("0"),
-                    new Location("Delhi"), new Description("RR vs Kkr"),
-                    new UniqueTagList("Home")),
-            new Event(new Name("North korea trip"), constructTimeslotList(new Timeslot("2017-10-19", "2017-10-21")),
-                    new Priority("3"), new Location("North korea"), new Description("humanitarian treatment"),
-                    new UniqueTagList("Office")) };
-            //@@author
+                new Event(new Name("Putin party"),
+                        constructTimeslotList(new Timeslot("2017-12-14 03:00PM", " 05:00PM")), new Priority("2"),
+                        new Location("Pittsburg"), new Description("WW3"), new UniqueTagList("office")),
+                new Event(new Name("Communist party meeting"),
+                        constructTimeslotList(new Timeslot("2017-11-19 ", "2017-11-22")), new Priority("0"),
+                        new Location("South China Sea"), new Description("Nuclear war"),
+                        new UniqueTagList("school")),
+                new Event(new Name("Cricket game"),
+                        constructTimeslotListTentative(new Timeslot("2019-11-12 02:00PM", "1800"),
+                                new Timeslot("2019-11-17 03:00PM", "2019-11-18 07:00PM")),
+                        new Priority("0"), new Location("Delhi"), new Description("RR vs Kkr"),
+                        new UniqueTagList("Home")),
+                new Event(new Name("North korea trip"),
+                        constructTimeslotList(new Timeslot("2017-10-19", "2017-10-21")), new Priority("3"),
+                        new Location("North korea"), new Description("humanitarian treatment"),
+                        new UniqueTagList("Office")) };
+            // @@author
         } catch (IllegalValueException e) {
             throw new AssertionError("sample data cannot be invalid", e);
         }
