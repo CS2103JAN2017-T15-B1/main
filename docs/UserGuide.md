@@ -39,18 +39,19 @@ TaskCrusher is a task and event manager that combines a GUI with command line-li
    * Force options and prefixed parameters (e.g. `d/` or `p/`) can be entered in any order
 
 **Table of parameters:**
-Parameter(s) | Acceptable formats | Default value
------------- | ------------------ | -------------
-Name | Alphanumeric characters | N/A, can’t be omitted
-Location, Description | Alphanumeric characters | No value
-Tag | Alphanumeric characters | No value
-Priority | 0, 1, 2, 3 | 0
-List | t, e | N/A, can’t be omitted
-Timeslot | See [Date Formats](#4-date-formats) | N/A, can’t be omitted
-Deadline | See [Date Formats](#4-date-formats) | No value
-Index number | 1 to number of last item on list | N/A, can’t be omitted
-Slot number | 1, 2, 3 | N/A, can’t be omitted
-Filepath | Acceptable filepath as defined by system | N/A, can’t be omitted
+
+| Parameter(s)          | Acceptable formats                       | Default value         |
+|-----------------------|------------------------------------------|-----------------------|
+| Name                  | Alphanumeric characters                  | N/A, can't be omitted |
+| Location, Description | Alphanumeric characters                  | No value              |
+| Tag                   | Alphanumeric characters                  | No value              |
+| Priority              | 0, 1, 2, 3                               | 0                     |
+| List                  | t, e                                     | N/A, can't be omitted |
+| Timeslot              | See [Date Formats](#4-date-formats)      | N/A, can't be omitted |
+| Deadline              | See [Date Formats](#4-date-formats)      | No value              |
+| Index number          | 1 to number of last item on list         | N/A, can't be omitted |
+| Slot number           | 1, 2, 2003                               | N/A, can't be omitted |
+| Filepath              | Acceptable filepath as defined by system | N/A, can't be omitted |
 
 ### 3.1. View help
 
@@ -61,18 +62,20 @@ Format: `help`
 
 Items in TaskCrusher are either tasks or events. <br>
 Tasks and events are distinct: <br>
-Tasks are jobs that must be done by a certain date or by an unspecified point in time, and thus may or may not possess a deadline. <br>
-Events are commitments that take up a certain time frame and thus must possess a timeslot. Users, by default, are prevented from adding events that clash with preexisting events. This can be overridden by using the --force option detailed below.
+   * Tasks are jobs that must be done by a certain date or by an unspecified point in time, and thus may or may not possess a deadline.
+   * Events are commitments that take up a certain time frame and thus must possess a timeslot. 
+   * Users, by default, are prevented from adding events that clash with preexisting events. 
+   * This can be overridden by using the --force option detailed below.
 
 **Add event**: <br>
-Format: `add e EVENT_NAME [--force] d/TIMESLOT [d/TIMESLOT_2] [p/PRIORITY] [l/LOCATION] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`<br>
+Format: `add e EVENT_NAME [--force] d/TIMESLOT [d/TIMESLOT_2] [p/PRIORITY] [l/LOCATION] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`
    * If the force option is specified, checking for clashes is disabled.
    * Although at least one timeslot must be specified, up to three timeslots are supported in order to support tentative events. Timeslots can later be confirmed using the `confirm` command
    * More than one tag can be specified <br>
 Example: `add e Review Session --force d/today d/tomorrow p/2 l/Auditorium`
 
-**Add task**:
-Format: `add t TASK_NAME [d/DEADLINE]  [p/PRIORITY] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`<br>
+**Add task**: <br>
+Format: `add t TASK_NAME [d/DEADLINE]  [p/PRIORITY] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`
    * If a deadline is specified, only one should be specified
    * More than one tag can be specified <br>
 Example: `add t Cook Omelets p/3 //Make enough for 5`
@@ -92,12 +95,12 @@ Format: `list complete`<br>
 Format: `list all`<br>
 
 **List all tasks and events on or before a given date**: <br>
-Format: `list d/DEADLINE`<br>
+Format: `list d/DEADLINE`
    * Tasks with no deadlines will not appear <br>
 Example: `list d/next Tuesday`
 
 **List all tasks and events that overlap with a given time frame**: <br>
-Format: `list d/TIMESLOT`<br>
+Format: `list d/TIMESLOT`
    * Tasks with no deadlines will not appear <br>
 Example: `list d/May 5, 2013 to May 8, 2017`
 
@@ -127,13 +130,13 @@ Example: `mark e 15 incomplete`
 Tasks can be switched to become events and vice versa. <br>
 The item is specified by specifying which list to target (task or event) and its index/numbering within that list.
 
-**Switch task to event**:
-Format: `switch t INDEX_NUMBER d/TIMESLOT`<br>
+**Switch task to event**: <br>
+Format: `switch t INDEX_NUMBER d/TIMESLOT`
    * Note that the timeslot cannot be omitted <br>
 Example: `switch t 2 d/today to tomorrow`
 
-**Switch event to task**:
-Format: `switch e INDEX_NUMBER [d/DEADLINE]`<br>
+**Switch event to task**: <br>
+Format: `switch e INDEX_NUMBER [d/DEADLINE]`
    * Events switched to tasks will lose their locations <br>
 Example: `switch e 1`
 
@@ -149,7 +152,7 @@ Example: `confirm e 14 1`
 ### 3.8. Find items by keywords
 
 **Find items with fields that match keywords**:<br>
-Format: `find KEYWORD_1 … [KEYWORD_N]` <br>
+Format: `find KEYWORD_1 … [KEYWORD_N]`
    * Name, description and location are searched through
    * More than one keyword can be specified
    * Items from both task and event lists displayed <br>
