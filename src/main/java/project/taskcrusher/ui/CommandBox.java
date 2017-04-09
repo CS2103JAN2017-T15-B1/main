@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import project.taskcrusher.commons.core.LogsCenter;
+import project.taskcrusher.commons.events.model.TimerToUpdateEvent;
 import project.taskcrusher.commons.events.ui.NewResultAvailableEvent;
 import project.taskcrusher.commons.util.FxViewUtil;
 import project.taskcrusher.logic.Logic;
@@ -41,6 +42,7 @@ public class CommandBox extends UiPart<Region> {
     @FXML
     private void handleCommandInputChanged() {
         try {
+            signalUserInboxToUpdateTimer();
             CommandResult commandResult = logic.execute(commandTextField.getText());
 
             // process result of the command
@@ -75,6 +77,10 @@ public class CommandBox extends UiPart<Region> {
             return;
         }
         styleClass.add(ERROR_STYLE_CLASS);
+    }
+
+    private void signalUserInboxToUpdateTimer() {
+        raise(new TimerToUpdateEvent());
     }
 
 }

@@ -21,11 +21,11 @@ public class EventListCard extends UiPart<Region> {
     @FXML
     private HBox cardPane;
     @FXML
-    private Label name;
-    @FXML
     private Label id;
     @FXML
-    private Label eventLocation; //named like this to avoid collision between the builtin name
+    private Label name;
+    @FXML
+    private Label eventLocation; //named like this to avoid collision with the built-in "location" element
     @FXML
     private Label description;
     @FXML
@@ -41,35 +41,39 @@ public class EventListCard extends UiPart<Region> {
 
     public EventListCard(ReadOnlyEvent event, int displayedIndex, boolean isOverdue) {
         super(FXML);
-        showIdAndName(event, displayedIndex);
-        showLocation(event);
+        showId(displayedIndex);
+        showName(event);
+        showLocationIfAny(event);
         showDescription(event);
         showPriority(event);
         showEventTimeSlots(event);
-        displayCompleteStatusIfApplicable(event);
-        displayOverdueStatusIfApplicable(event, isOverdue);
+        showCompleteStatusIfApplicable(event);
+        showOverdueStatusIfApplicable(event, isOverdue);
 
         initTags(event);
     }
 
-    private void showIdAndName(ReadOnlyEvent event, int displayedIndex) {
-        name.setText(event.getName().name);
-        name.setMinWidth(Region.USE_PREF_SIZE);
+    private void showId(int displayedIndex) {
         id.setText(displayedIndex + ". ");
     }
 
-    private void displayCompleteStatusIfApplicable(ReadOnlyEvent event) {
+    private void showName(ReadOnlyEvent event) {
+        name.setText(event.getName().name);
+//        name.setMinWidth(Region.USE_PREF_SIZE);
+    }
+
+    private void showCompleteStatusIfApplicable(ReadOnlyEvent event) {
         if (!event.isComplete()) {
             tickIcon.setVisible(false);
         }
     }
 
-    private void displayOverdueStatusIfApplicable(ReadOnlyEvent event, boolean isOverdue) {
+    private void showOverdueStatusIfApplicable(ReadOnlyEvent event, boolean isOverdue) {
         if (!event.isComplete() && isOverdue) {
             overdueIcon.setVisible(true);
             overdueIcon.setManaged(true);
             for (Node child: timeslots.getChildren()) {
-                child.setStyle("-fx-text-fill: red"); //should not be done this way
+                child.setStyle("-fx-text-fill: red"); //done this way to overwrite the CSS properties
             }
         } else {
             overdueIcon.setVisible(false);
@@ -79,9 +83,7 @@ public class EventListCard extends UiPart<Region> {
 
     private void showDescription(ReadOnlyEvent event) {
         description.setText(event.getDescription().description);
-        if (event.getDescription().hasDescription()) {
-            description.setMinWidth(Region.USE_PREF_SIZE);
-        } else {
+        if (!event.getDescription().hasDescription()) {
             description.setVisible(false);
         }
     }
@@ -104,14 +106,19 @@ public class EventListCard extends UiPart<Region> {
         priority.setMinWidth(Region.USE_PREF_SIZE);
     }
 
-    private void showLocation(ReadOnlyEvent event) {
-        eventLocation.setText(UiDisplayUtil.locationForUi(event.getLocation()));
-        eventLocation.setMinWidth(Region.USE_PREF_SIZE);
+    private void showLocationIfAny(ReadOnlyEvent event) {
+        eventLocation.setText(UiDisplayUtil.getLocationStringForUi(event.getLocation()));
+        if (event.getLocation().hasLocation()) {
+            eventLocation.setMinWidth(Region.USE_PREF_SIZE);
+        } else {
+            eventLocation.setVisible(false);
+            eventLocation.setManaged(false);
+        }
     }
 
     private void showEventTimeSlots(ReadOnlyEvent event) {
         event.getTimeslots().forEach(timeslot -> timeslots.getChildren().add(new Label(
-                UiDisplayUtil.timeslotAsStringForUi(timeslot))));
+                UiDisplayUtil.renderTimeslotAsStringForUi(timeslot))));
     }
 
     private void initTags(ReadOnlyEvent event) {

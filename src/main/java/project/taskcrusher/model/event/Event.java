@@ -24,7 +24,7 @@ public class Event extends UserToDo implements ReadOnlyEvent {
     private Location location;
 
     /**
-     *  Constructor for event. {@code isComplete} is set to false.
+     *  Constructor for event. {@code isComplete} is initially set to false.
      *  {@code timeslots} will be sorted from earliest start time to latest start time
      */
     public Event(Name name, List<Timeslot> timeslots, Priority priority, Location location, Description description,
@@ -114,9 +114,7 @@ public class Event extends UserToDo implements ReadOnlyEvent {
         this.setLocation(replacement.getLocation());
         this.setDescription(replacement.getDescription());
         this.setTags(replacement.getTags());
-        if (replacement.isComplete()) {
-            this.markComplete();
-        }
+        this.isComplete = replacement.isComplete();
     }
 
     @Override
@@ -138,17 +136,14 @@ public class Event extends UserToDo implements ReadOnlyEvent {
 
     @Override
     public int compareTo(ReadOnlyEvent another) {
-        if (this.isComplete) {
-            if (another.isComplete()) {
-                return 0;
-            } else {
-                return 1;
-            }
-        } else if (another.isComplete()) {
+        if (this.isComplete && !another.isComplete()) {
+            return 1;
+        } else if (!this.isComplete && another.isComplete()) {
             return -1;
+        } else {
+            //both are complete, or both are incomplete
+            return this.getEarliestBookedTime().compareTo(another.getEarliestBookedTime());
         }
-
-        return this.getEarliestBookedTime().compareTo(another.getEarliestBookedTime());
     }
 
     /**

@@ -8,8 +8,9 @@ import project.taskcrusher.model.tag.Tag;
 import project.taskcrusher.model.tag.UniqueTagList;
 import project.taskcrusher.model.task.Deadline;
 
+//@@author A0127737X
 /**
- *
+ * Builds a TestTaskCard object with specified fields.
  */
 public class TaskBuilder {
 

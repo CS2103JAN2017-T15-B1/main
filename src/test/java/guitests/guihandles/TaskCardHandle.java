@@ -12,6 +12,7 @@ import project.taskcrusher.commons.util.UiDisplayUtil;
 import project.taskcrusher.model.tag.UniqueTagList;
 import project.taskcrusher.model.task.ReadOnlyTask;
 
+//@@author A0127737X
 /**
  * Provides a handle to a task card in the task list panel.
  */
@@ -73,10 +74,9 @@ public class TaskCardHandle extends GuiHandle {
         return guiRobot.from(node).lookup(TAGS_FIELD_ID).query();
     }
 
-    //@@author A0127737X
     public boolean isSameTask(ReadOnlyTask task) {
         String uiAdjustedPriority = UiDisplayUtil.priorityForUi(task.getPriority());
-        String uiAdjustedDeadline = UiDisplayUtil.deadlineForUi(task.getDeadline());
+        String uiAdjustedDeadline = UiDisplayUtil.renderDeadlineAsStringForUi(task.getDeadline());
 
         return getTaskName().equals(task.getName().name)
                 && getPriority().equals(uiAdjustedPriority)

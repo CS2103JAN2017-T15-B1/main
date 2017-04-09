@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import project.taskcrusher.model.shared.Name;
 
-//@@author A0127737X
 public class NameTest {
 
     @Test

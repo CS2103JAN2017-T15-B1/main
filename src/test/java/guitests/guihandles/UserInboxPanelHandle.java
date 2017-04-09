@@ -18,7 +18,7 @@ import project.taskcrusher.model.task.Task;
 import project.taskcrusher.testutil.TestUtil;
 
 /**
- * Provides a handle for the panel containing the person list.
+ * Provides a handle for the panel containing the task and event lists.
  */
 public class UserInboxPanelHandle extends GuiHandle {
 
@@ -67,9 +67,9 @@ public class UserInboxPanelHandle extends GuiHandle {
     }
 
     /**
-     * Returns true if the list is showing the person details correctly and in correct order.
+     * Returns true if the list is showing the task details correctly and in correct order.
      * @param startPosition The starting position of the sub list.
-     * @param tasks A list of person in the correct order.
+     * @param tasks A list of tasks in the correct order.
      */
     public boolean isListMatching(int startPosition, ReadOnlyTask... tasks) throws IllegalArgumentException {
         if (tasks.length + startPosition != getTaskListView().getItems().size()) {
@@ -121,12 +121,9 @@ public class UserInboxPanelHandle extends GuiHandle {
             return false;
         }
 
-        // Return false if any of the persons doesn't match
+        // Return false if any of the tasks doesn't match
         for (int i = 0; i < tasks.length; i++) {
             if (!tasksInList.get(startPosition + i).getName().name.equals(tasks[i].getName().name)) {
-                System.out.println("in list is " + tasksInList.get(startPosition + i).getName().name);
-                System.out.println("Wanted is " + tasks[i].getName().name);
-                System.out.println(i + " dont match");
                 return false;
             }
         }
@@ -145,7 +142,7 @@ public class UserInboxPanelHandle extends GuiHandle {
             return false;
         }
 
-        // Return false if any of the persons doesn't match
+        // Return false if any of the events doesn't match
         for (int i = 0; i < events.length; i++) {
             if (!eventsInList.get(startPosition + i).getName().name.equals(events[i].getName().name)) {
                 return false;
@@ -168,7 +165,7 @@ public class UserInboxPanelHandle extends GuiHandle {
     }
 
     /**
-     * Navigates the listview to display and select the person.
+     * Navigates the taskListView to display and select the task.
      */
     public TaskCardHandle navigateToTask(ReadOnlyTask task) {
         int index = getTaskIndex(task);
@@ -183,7 +180,7 @@ public class UserInboxPanelHandle extends GuiHandle {
     }
 
     /**
-     * Navigates the listview to display and select the event.
+     * Navigates the EventListView to display and select the event.
      */
     public EventCardHandle navigateToEvent(ReadOnlyEvent event) {
         int index = getEventIndex(event);
@@ -211,7 +208,7 @@ public class UserInboxPanelHandle extends GuiHandle {
 
 
     /**
-     * Returns the position of the person given, {@code NOT_FOUND} if not found in the list.
+     * Returns the position of the task given, {@code NOT_FOUND} if not found in the list.
      */
     public int getTaskIndex(ReadOnlyTask targetTask) {
         List<ReadOnlyTask> tasksInList = getTaskListView().getItems();
@@ -224,7 +221,7 @@ public class UserInboxPanelHandle extends GuiHandle {
     }
 
     /**
-     * Returns the position of the person given, {@code NOT_FOUND} if not found in the list.
+     * Returns the position of the event given, {@code NOT_FOUND} if not found in the list.
      */
     public int getEventIndex(ReadOnlyEvent targetEvent) {
         List<ReadOnlyEvent> eventsInList = getEventListView().getItems();
@@ -236,21 +233,14 @@ public class UserInboxPanelHandle extends GuiHandle {
         return NOT_FOUND;
     }
 
-    /**
-     * Gets a person from the list by index
-     */
-    public ReadOnlyTask getPerson(int index) {
-        return getTaskListView().getItems().get(index);
-    }
-
     public TaskCardHandle getTaskCardHandle(int index) {
         return getTaskCardHandle(new Task(getTaskListView().getItems().get(index)));
     }
 
-    public TaskCardHandle getTaskCardHandle(ReadOnlyTask person) {
+    public TaskCardHandle getTaskCardHandle(ReadOnlyTask task) {
         Set<Node> nodes = getAllCardNodes();
         Optional<Node> taskCardNode = nodes.stream()
-                .filter(n -> new TaskCardHandle(guiRobot, primaryStage, n).isSameTask(person))
+                .filter(n -> new TaskCardHandle(guiRobot, primaryStage, n).isSameTask(task))
                 .findFirst();
         if (taskCardNode.isPresent()) {
             return new TaskCardHandle(guiRobot, primaryStage, taskCardNode.get());

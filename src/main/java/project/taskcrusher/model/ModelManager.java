@@ -35,10 +35,10 @@ public class ModelManager extends ComponentManager implements Model {
     private final UserInbox userInbox;
     private final FilteredList<ReadOnlyTask> filteredTasks;
     private final FilteredList<ReadOnlyEvent> filteredEvents;
-    private final Stack<UserInbox> undoStack = new Stack<>();
-    private final Stack<UserInbox> redoStack = new Stack<>();
+    private final Stack<UserInbox> undoStack;
+    private final Stack<UserInbox> redoStack;
     private boolean isLastPerformedActionUndo;
-    private boolean isLastSeenListsActiveLists = false; //to make the list showing consistent after user actions
+    private boolean isLastSeenListsActiveLists; //to make the lists showing consistent after user actions
 
     /**
      * Initialises a ModelManager with the given userInbox and userPrefs.
@@ -52,6 +52,8 @@ public class ModelManager extends ComponentManager implements Model {
         this.userInbox = new UserInbox(userInbox);
         filteredTasks = new FilteredList<>(this.userInbox.getTaskList());
         filteredEvents = new FilteredList<>(this.userInbox.getEventList());
+        undoStack = new Stack<>();
+        redoStack = new Stack<>();
         updateFilteredListsToShowAll();
     }
 
@@ -59,6 +61,7 @@ public class ModelManager extends ComponentManager implements Model {
         this(new UserInbox(), new UserPrefs());
     }
 
+    //@@author A0163639W
     public boolean undo() {
         if (undoStack.isEmpty()) {
             return false;
@@ -110,7 +113,11 @@ public class ModelManager extends ComponentManager implements Model {
         raise(new ListsToShowUpdatedEvent(eventCount, taskCount));
     }
 
-    private void showAppropriateList() {
+    /**
+     * For smooth user experience, unless specified, keep the format of the lists shown consistent
+     * with what was previously shown before the user entered the command.
+     */
+    private void showAppropriateLists() {
         if (isLastSeenListsActiveLists) {
             updateFilteredListsToShowActiveToDo();
         } else {
@@ -133,7 +140,6 @@ public class ModelManager extends ComponentManager implements Model {
         saveUserInboxStateForUndo();
         userInbox.addTask(task);
         updateFilteredListsToShowActiveToDo();
-        isLastSeenListsActiveLists = true;
         indicateUserInboxChanged();
     }
 
@@ -144,7 +150,7 @@ public class ModelManager extends ComponentManager implements Model {
         saveUserInboxStateForUndo();
         int taskListIndex = filteredTasks.getSourceIndex(filteredTaskListIndex);
         userInbox.updateTask(taskListIndex, editedTask);
-        showAppropriateList();
+        showAppropriateLists();
         indicateUserInboxChanged();
     }
 
@@ -163,7 +169,7 @@ public class ModelManager extends ComponentManager implements Model {
         saveUserInboxStateForUndo();
         userInbox.removeTask(toDelete);
         userInbox.addEvent(toAdd);
-        showAppropriateList();
+        showAppropriateLists();
         indicateUserInboxChanged();
     }
 
@@ -184,7 +190,7 @@ public class ModelManager extends ComponentManager implements Model {
         saveUserInboxStateForUndo();
         int eventListIndex = filteredEvents.getSourceIndex(filteredEventListIndex);
         userInbox.updateEvent(eventListIndex, editedEvent);
-        showAppropriateList();
+        showAppropriateLists();
         indicateUserInboxChanged();
     }
 
@@ -220,7 +226,7 @@ public class ModelManager extends ComponentManager implements Model {
         saveUserInboxStateForUndo();
         userInbox.removeEvent(toDelete);
         userInbox.addTask(toAdd);
-        showAppropriateList();
+        showAppropriateLists();
         indicateUserInboxChanged();
     }
 
@@ -313,24 +319,28 @@ public class ModelManager extends ComponentManager implements Model {
         String toString();
     }
 
+    /**
+     * Checks if {@code item} contains any of the keywords as substring in its name, description,
+     * tags (and location if {@code item instanceof Event}).
+     */
     private class KeywordQualifier implements Qualifier {
-        private Set<String> nameKeyWords;
+        private Set<String> keyWords;
         private boolean showCompletedItemsToo;
 
-        KeywordQualifier(Set<String> nameKeyWords, boolean showCompletedItemsToo) {
-            this.nameKeyWords = nameKeyWords;
+        KeywordQualifier(Set<String> keyWords, boolean showCompletedItemsToo) {
+            this.keyWords = keyWords;
             this.showCompletedItemsToo = showCompletedItemsToo;
         }
 
         @Override
         public boolean run(ReadOnlyUserToDo item) {
             if (showCompletedItemsToo) {
-                return nameKeyWords.stream()
+                return keyWords.stream()
                     .filter(keyword -> StringUtil.containsSubstringIgnoreCase(item.toString(), keyword))
                     .findAny()
                     .isPresent();
             } else {
-                return !item.isComplete() && nameKeyWords.stream()
+                return !item.isComplete() && keyWords.stream()
                         .filter(keyword -> StringUtil.containsSubstringIgnoreCase(item.toString(), keyword))
                         .findAny()
                         .isPresent();
@@ -339,14 +349,14 @@ public class ModelManager extends ComponentManager implements Model {
 
         @Override
         public String toString() {
-            return "name=" + String.join(", ", nameKeyWords);
+            return "name=" + String.join(", ", keyWords);
         }
     }
 
     /**
      * checks if:
-     * (1) if the ToDo item is an active task, its deadline falls within the given timeslot
-     * (2) if the ToDO item is an active event, its timeslots overlaps with the given timeslot
+     * 1. if the {@code item} is an active task, its deadline falls within {@code timeslot}
+     * 2. if the {@code item} is an active event, any of its timeslots overlaps with {@code timeslot}
      */
     private class TimeslotQualifier implements Qualifier {
         private Timeslot userInterestedTimeslot;
@@ -379,7 +389,7 @@ public class ModelManager extends ComponentManager implements Model {
     }
 
     /**
-     * checks if the given UserToDo is marked as complete or incomplete
+     * checks if {@code item} is marked as complete or incomplete
      */
     private class CompletionQualifier implements Qualifier {
         private boolean showComplete;

@@ -11,8 +11,8 @@ import project.taskcrusher.testutil.TestUtil;
 
 //@@author A0127737X
 /**
- * The find command searches for any keywords contained as a substring in the name, description, tags
- * (and for events, location). Checks through both the event and task lists for any hits with a keyword.
+ * Find command searches for any keywords contained as a substring in the name, description, tags
+ * (and for events, location) fields. Checks through both the event and task lists for any hits with a keyword.
  */
 public class FindCommandTest extends TaskcrusherGuiTest {
 

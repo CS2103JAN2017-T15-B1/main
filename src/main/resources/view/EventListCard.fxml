@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- @@author A0127737X -->
+
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -13,6 +13,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
+<!-- @@author A0127737X -->
 <HBox id="cardPane" fx:id="cardPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <GridPane HBox.hgrow="ALWAYS">
@@ -36,12 +37,11 @@
                                 </minWidth>
                             </Label>
                             <ImageView fx:id="overdueIcon" fitHeight="16.0" fitWidth="16.0">
-                                    <image>
-                                        <Image url = "images/overdue.png" ></Image>
-                                    </image>
+                                <image>
+                                    <Image url = "images/overdue.png" ></Image>
+                                </image>
                             </ImageView>
-                            <Label fx:id="name" text="\$event_name" styleClass="cell_big_label"/>
-                            <Label fx:id="eventLocation" styleClass="cell_big_label" text="\$location" />
+                            <Label fx:id="name" wrapText="true" text="\$event_name" styleClass="cell_big_label"/>
                             <Label fx:id="priority" styleClass="priority" text="\$priority" />
                             <FlowPane fx:id="tags" />
                             <ImageView fx:id="tickIcon" fitHeight="25.0" fitWidth="25.0">
@@ -51,7 +51,10 @@
                             </ImageView>
                         </HBox>
                         <FlowPane fx:id="timeslots" styleClass = "timeslots"/>
-                        <Label fx:id="description" text="\$description" />
+                        <HBox spacing="20" alignment="CENTER_LEFT">
+                        <Label fx:id="eventLocation" text="\$location" />
+                        <Label fx:id="description" wrapText="true" text="\$description" />
+                        </HBox>
                     </children>
                 </VBox>
             </children>

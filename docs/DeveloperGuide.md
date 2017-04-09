@@ -10,11 +10,11 @@ By : `Team T15B1`  &nbsp;&nbsp;&nbsp;&nbsp; Since: `Feb 2017`  &nbsp;&nbsp;&nbsp
 4. [Testing](#testing)
 5. [Dev Ops](#dev-ops)
 
-* [Appendix A: User Stories](#appendix-a--user-stories)
-* [Appendix B: Use Cases](#appendix-b--use-cases)
-* [Appendix C: Non Functional Requirements](#appendix-c--non-functional-requirements)
-* [Appendix D: Glossary](#appendix-d--glossary)
-* [Appendix E : Product Survey](#appendix-e--product-survey)
+* [Appendix A: User Stories](#appendix-a-user-stories)
+* [Appendix B: Sample Use Cases](#appendix-b-sample-use-cases)
+* [Appendix C: Non Functional Requirements](#appendix-c-non-functional-requirements)
+* [Appendix D: Glossary](#appendix-d-glossary)
+* [Appendix E : Product Survey](#appendix-e-product-survey)
 
 
 ## 1. Setting up
@@ -74,6 +74,22 @@ By : `Team T15B1`  &nbsp;&nbsp;&nbsp;&nbsp; Since: `Feb 2017`  &nbsp;&nbsp;&nbsp
 
 
 ## 2. Design
+
+### 2.0. Terminology (some extracts from [Appendix D: Glossary](#appendix-d-glossary))
+
+Author: Yoshi Nishimura
+
+#### Task
+> A task is to be completed by some deadline. If a task does not have a deadline, then it is considered to be "done someday".
+
+#### Event
+> An event takes place during a specific time slot, which may or may not extend over one or more days. When there are more than one time slot assigned, it is considered tentative.
+
+#### Active task or event
+> An active task or event is one that is yet to be marked as `completed` by the user.
+
+#### User inbox
+> The user inbox contains the lists of all the events and all the tasks, complete or incomplete
 
 ### 2.1. Architecture
 
@@ -159,9 +175,14 @@ The `UI` component,
 * Binds itself to some data in the `Model` so that the UI can auto-update when data in the `Model` change.
 * Responds to events raised from various parts of the App and updates the UI accordingly. For example, when the user has made changes to the underlying `Model` data by deleting a task, the `statusBar` will update its `syncStatus` field through `UserInboxChangedEvent`.
 
-**The `UserInboxPanel`:**
+#### 2.2.1 `UserInboxPanel`
 - contains two `ListView`s, namely, `taskList` and `eventList`.
-- The visibility of these two lists will be altered according to the command entered. For example, if the user wants to list tasks whose deadlines are set before next Monday, he would type in `list t d/next Monday`. This command would set the visibility of `eventList` to hidden so that the user can use the entire window to list the tasks he/she is interested in. This is accomplished by the `Model` posting `taskListToShowUpdatedEvent` and `eventListShowUpdatedEvent` and the `UserInboxPanel` listening to these events to determine whether the filtered lists are empty or not.
+- The visibility of these two lists will be altered according to the command entered. More specifically, when the lists are filtered following a user command, say `find assignment`, if none of the active events match the keyword `assignment`, the visibility of `eventList` shall be set to `false` and thus be hidden from the UI. This is accomplished by `Model` raising `filteredListsUpdatedEvent`, which contains information about the number of tasks and number of events to be listed.`UserInboxPanel` listens to and handles this event to determine whether the filtered lists are empty or not and thus to adjust the visibility accordingly.
+
+#### 2.2.2 Display of overdue status
+- `UserInboxPanel` has a `Date` object which is used as a timer to check against the deadlines and time slots of active tasks and events.
+- More specifically, the constructors of both `TaskListCard` and `EventListCard` takes in a boolean field `isOverdue` which indicates whether or not this active task or event should display the overdue status. This boolean value is computed using `isOverdue(Date timer)` method of `Task` and `Event` class, where the argument `timer` belongs to `UserInboxPanel`.
+- This timer is updated through `handleTimerToUpdateEvent()` method, where the `TimerToUpdateEvent` is raised by `CommandBox` whenever the user enters a command. This approach reduces the direct coupling between the UI components, and makes sure that the status of tasks and events shown to the user is as accurate as possible.
 
 ### 2.3. Logic component
 
@@ -174,10 +195,19 @@ _Figure 2.3.1 : Structure of the Logic Component_
 
 1. `Logic` uses the `Parser` class to parse the user command.
 2. `Parser` calls the appropriate parser for the identified command, e.g. `AddCommandParser` and `DeleteCommandParser`
-3. The command parser creates the appropriate task or event version of the command, e.g. `AddTaskCommand` and `AddEventCommand`
+3. The command parser creates the appropriate command, e.g. `AddCommand` or `ListCommand`
 4. This `Command` object is executed by the `LogicManager`.
 5. The command execution can affect the `Model` (e.g. editing a task) and/or raise events.
 6. The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `Ui`.
+
+#### 2.3.1 Date Parsing
+- Each individual date given in a command is parsed by `DateUtil`, which relies on ApacheCommons DateUtils and Natty Time Parser in order to produce Java Date objects
+- Specifically, Natty provides nlp for dates, and DateUtils is used for date manipulation.
+- Both Natty and DateUtils are necessary to construct timeslots where one or more date/time elements are omitted for ease of entry.
+
+#### 2.3.2 Task and Event Variants
+- Tasks and events are passed to the same type of command, but the command may call different model methods when executed based on whether a task or event is operated on
+- For example, when executed AddCommand() is able to add either a task or a command, but calls addTask() and addEvent(), respectively.
 
 Given below is the Sequence Diagram for interactions within the `Logic` component for the `execute("delete t 1")`
  API call.<br>
@@ -189,36 +219,43 @@ _Figure 2.3.1 : Interactions Inside the Logic Component for the `delete t 1` Com
 Author: Yoshi Nishimura
 
 <img src="images/ModelClassDiagram.png" width="800"><br>
-_Figure 2.4.1.1 : Structure of the Model Component1/2_
-
-<br><img src="images/ModelClassDiagram2.png" width="800"><br>
-_Figure 2.4.1.2 : Structure of the Model Component2/2_
+_Figure 2.4.1.1 : Structure of the Model Component 1/2_
 
 **API** : [`Model.java`](../src/main/java/project/taskcrusher/model/Model.java)
 
 The `Model`,
 
 * stores a `UserPref` object that represents the user's preferences.
-* stores the User inbox data, including the list of events, list of tasks and list of tags associated with the items in user inbox.
+* stores the user inbox data, including the list of events, list of tasks and list of tags associated with them.
 * exposes a `UnmodifiableObservableList<ReadOnlyTask>` and `UnmodifiableObservableList<ReadOnlyEvent>` that can be 'observed' e.g. the `UserInboxPanel` in UI can be notified of any updates so that the UI automatically updates when the data in the list change.
 * does not depend on any of the other three components.
-* `Task` and `Event` inherits of `UserItem`.
 
-**Task** consists of:
+#### 2.4.1 Relationship between `Task`, `Event` and `UserToDo` classes
+
+<br><img src="images/ModelClassDiagram2.png" width="800"><br>
+_Figure 2.4.1.2 : Structure of the Model Component 2/2_
+
+**UserToDo** is the parent class of `Task` and `Event`, consisting of the following attributes:
 1. Name
-2. Deadline (optional)
-3. Priority: 1, 2, 3 in ascending order (optional. default = 0)
-4. Description (optional)
-5. Zero or more tags
+2. Priority: 1, 2, 3 in increasing importance (optional. default = 0)
+3. Description (optional)
+4. Zero or more tags
 
-**Event** consists of:
-1. Name
-2. One or more Timeslots
-3. Location (optional)
-4. Description (optional)
-5. Zero or more tags
+**Task**, on top of `UserToDo` attributes, consists of:
+1. Deadline (optional)
 
-**Note**: the reason why although some elements are optional but are still tied as composition is that when they are not supplied by the user, the `Model` would set their values to default values (e.g. empty string).
+**Event**, on top of `UserToDo` attributes, consists of:
+1. One or more time slots
+2. Location (optional)
+
+**Note**: the reason why although some elements are optional but are still tied as composition is that when they are not supplied by the user, the `Model` would set their values to default values (e.g. empty string for `Description`).
+
+#### 2.4.2 Alternative design for `Event` and `Task`
+- Alternative design for modeling tasks with/without deadlines and events with time slots would have been to have one generic `Task` class that can act either as an event or a task. This class may consist of:
+
+1. zero or more time slots
+2. zero or one deadline
+3. zero or one location
 
 ### 2.5. Storage component
 
@@ -249,6 +286,35 @@ Another way to implement Undo and redo is by creating a list of integers whereby
 
 Classes used by multiple components are in the `project.taskcrusher.commons` package.
 
+### 2.7 Sample sequence diagrams
+
+In this section, we demonstrate how the components work together in more detail by illustrating sequence diagrams.
+
+#### 2.7.1 Mark complete command
+Author: Yoshi Nishimura
+
+<img src="images/SDmarkTaskComplete.png" width="900"><br>
+_Figure 2.7.1 : Sequence Diagram for mark task complete_
+
+**Explanation:**
+
+1. When the user enters a command to `CommandBox` in `UI`, it raises `TimerToUpdateEvent` so that `UserInboxPanel` can be notified to update its timer before it renders the filtering of tasks and events, and  thus show appropriate feedback for overdue events and tasks. `TimerToUpdateEvent` is raised for ANY command: this is just one example.
+2. In `saveUserInboxStateForUndo()`, a copy of the current state of user inbox is pushed into `undoStack` so that user can recover to the state before the task was marked.
+3. Since `isComplete` status is saved in hard disk for all events and tasks, `userInboxChangedEvent` is raised by `Model` for `Storage` to handle and save the state of UserInbox.
+4. After `updateFilteredListsToShowAll()` is called, `Model` raises `filteredListsUpdatedEvent` which holds two `int` fields representing the sizes of the filtered task list and event list. This is handled by `UserInboxPanel` in `UI`, which retrieves and displays the two numbers at the top of the lists; if any of them are 0, that list would be hidden.
+5. This sequence of interactions is very similar for the rest of the commands that modifies the content in the user inbox, including add, edit, delete, switch, and of course, mark incomplete.
+**Note:**: `Storage` class is intentionally omitted from the diagram for simplicity. As explained previously in [Events driven nature of the design](#Events-Driven-nature-of-the-design)
+
+### 2.8. Activity Diagram
+Author: Yoshi Nishimura
+
+The following activity diagram summarises all the possible actions the user may conduct with TaskCrusher.
+
+**Note**: In the diagram, more-detailed actions, such as confirm event time slots are generalized and omitted.
+
+<img src="images/ActivityDiagram.png" width="900"><br>
+_Figure 2.8.1 : Activity Diagram_
+
 ## 3. Implementation
 
 ### 3.1. Logging
@@ -274,7 +340,6 @@ and logging destinations.
 
 Certain properties of the application can be controlled (e.g App name, logging level) through the configuration file
 (default: `config.json`):
-
 
 ## 4. Testing
 
@@ -379,48 +444,42 @@ b. Require developers to download those libraries manually (this creates extra w
 Priorities: High (must have) - `* * *`, Medium (nice to have)  - `* *`,  Low (unlikely to have) - `*`
 
 Priority | As a ... | I can ... | So that I can...
--------- | :----------- | :-------------------- | :-------------------------
+-------- | :---------------- | :---------------------------- | :----------------------------
 `* * *` | new user |  view an instruction manual | remember the format and syntax of commands when necessary
 `* * *` | user | quit the program from the command line | avoid the trouble of using the GUI when quit
 `* * *` | user with [events](#event)| add an event by specifying its start date/time and end date/time either in relative or absolute form i.e. `12 Mar` or `today`<br /><br /> **condition**: <br />when there is already an event booked for that time frame, I can be notified and choose whether or not to force the addition| book that time slot and be reminded of the event
 `* * *` | user with [tentative events](#tentative-event)| temporarily [block](#blocking) multiple time slots for a tentative event<br /><br /> **condition**: <br />I can later confirm its finalized time slot and [release](#releasing) all the other time slots| avoid time clash between events
 `* * *` | user with events| specify the location of an event | later adapt my actions based on where the event is located
-`* * *` | user with [tasks](#task)| add a task with a deadline, either in relative or absolute form |
-`* * *` | user with tasks| add a task without a deadline |
+`* * *` | user with [tasks](#task)| add a task with a deadline, either in relative or absolute form | more flexibly define dates and add tasks
+`* * *` | user with tasks| add a task without a deadline | keep track of my future goals that need not be accomplished immediately
 `* * *` | user with tasks or events that are related to each other | add tags to tasks or events | easily search and categorize tasks or events
 `* * *` | user | add a description to a task or an event | refer to relevant information in the future
-`* * *` | user with tasks| specify the priority of a task | later compare the importance of tasks, which can be especially useful for comparing tasks without deadlines
-`* * *` | user with tasks| view only tasks with deadlines |
-`* * *` | user with tasks| view only tasks without deadlines |
-`* * *` | user with an [active task](#active-task-or-event)| view the list of tasks that need to be completed by a specific deadline |
-`* * *` | user with an active task or event | update their fields.  **For both:** <ul><li>name</li><li>tag</li><li>description</li></ul>**For an event:**<ul><li>time frame</li><li>location</li></ul> **For a task:**<ul><li>priority</li><li>deadline</li></ul>|
-`* * *` | user with active events| view the list of events taking place during a specific time frame |
-`* * *` | user with many active tasks | sort tasks by their fields <ul><li>sort by name</li><li>sort by priority</li><li>sort by deadline</li><li>sort by tag</li></ul>| locate tasks with certain fields easily
-`* * *` | user with many active events | sort events by their fields <ul><li>sort by name</li><li>sort by start date</li><li>sort by tag</li></ul>| locate events with certain fields easily
-`* * *` | user with an active event | mark an active event as `done` and remove from the active list | separate it from other active tasks and events
+`* * *` | user | specify the priority of a task or an event | later compare the importance of them, which can be especially useful for comparing tasks without deadlines
+`* * *` | user with an [active task](#active-task-or-event)| view the list of tasks that need to be completed by a specific deadline | easily find out what to do by a specific date
+`* * *` | user with an active task or event | update their fields.  **For both:** <ul><li>name</li><li>tag</li><li>description</li><li>priority</li></ul>**For an event:**<ul><li>time slots</li><li>location</li></ul> **For a task:**<ul><li>deadline</li></ul>|avoid going through the trouble of deleting and adding just to fix one or two fields
+`* * *` | user with active events| view the list of events taking place during a specific time frame | know what event to attend quickly
+`* * *` | user with an active event | mark an active event as `complete` and remove from the active list | separate it from other active tasks and events
 `* * *` | user with an active event | cancel and dismiss an event in the active list <br /><br /> **condition**:<br />I can add a reason for why it is being dismissed before it gets moved into the [expired list](#expired-list)| distinguish between a successful event and a cancelled one
-`* * *` | user with an active task | mark an active task as `done` and remove from the active list | separate it from other active tasks and events
-`* * *` | user with an active task | dismiss an active task and remove from the active list <br /><br /> **condition**:<br />I can add a reason for why it is being dismissed before it gets moved into the expired list| distinguish between a task that was successfully done with one that failed
+`* * *` | user with an active task | mark an active task as `complete` and remove from the active list | separate it from other active tasks and events
+`* * *` | user with an active task | dismiss an active task and remove from the active list <br /><br /> **condition**:<br />I can add a reason for why it is being dismissed before it gets moved into the expired list| distinguish between a task that was successfully complete with one that failed
 `* * *` | user with overdue tasks and past events| view the list of tasks that are considered overdue or events past relative to the current time | manage them all at once
 `* * *` | user | view the effect of the last action undertaken | confirm the details of the action and amend if necessary
-`* * *` | user with many tasks and events in the active list | search for tasks or events by a keyword <ul><li>keyword in name</li> <li>keyword in tag</li><li>keyword in description </li></ul>|
-`* * *` | user who have completed one or more tasks | view a reverse chronological log of all completed tasks | see which tasks I have marked as `done` in the past
-`* * *` | user who have completed one or more events | view a reverse chronological log of all completed events | see which events I have marked as `done` in the past
+`* * *` | user with many tasks and events in the active list | search for tasks or events by a keyword <ul><li>keyword in name</li> <li>keyword in tag</li><li>keyword in description </li></ul>| avoid the trouble of navigating through the entire list to find a task or an event
+`* * *` | user who have completed one or more tasks | view a reverse chronological log of all completed tasks | see which tasks I have marked as `complete` in the past
+`* * *` | user who have completed one or more events | view a reverse chronological log of all completed events | see which events I have marked as `complete` in the past
 `* * *` | user who have dismissed a task | reverse chronological log of all dismissed tasks | see which tasks I have dismissed
 `* * *` | user who have completed or dismissed tasks or events | recycle a task or an event kept in the expired list | efficiently add back the previous events and tasks to the active list
 `* * *` | user who have completed or dismissed tasks or events | clear all the past tasks and events from the expired list | eliminate no-longer-relevant tasks and events and keep the log clean
 `* * *` | user | see error message when I enter an invalid command | ammend the command appropriately
-`* * *` | user | undo the last command entered |
-`* * *` | user | switch between multiple storage files | have separate task managers of different aspects of my life
+`* * *` | user | undo the last command entered | fix the mistake in one go
+`* * *` | user | switch between multiple storage files | have separate task managers for different aspects of my life
 `* * *` | user | specify the location of the storage file <br /><br /> **condition**:<br />If the file does not exist in the path, create a new file| place the file anywhere I find convenient, for example, in a shared folder
 `* * *` | advanced user | have raw access to the storage files | directly perform CRUD operation on the data all at once
 `* *` | user with recurring tasks or events| add a task or an event that are reccuring| avoid the trouble of manually adding repeatedly on a regular basis
 `* *` | user | identify free time slots in a day, week or month | can evaluate how busy I am and optimize the date for tasks and events to add
-`* *` | user | display daily, weekly, or monthly calendar views | visualize the deadlines of tasks and times of events for the day/week/month
-`* *` | user | view the history of all previously undertaken actions | prevent duplicate commands and correct entries that are erroneous in hindsight
-`* *` | user | choose between automatic save and manual save |
+`*` | user | display daily, weekly, or monthly calendar views | visualize the deadlines of tasks and times of events for the day/week/month
 `*` | user | have an auto-completion for commands that are predictable | avoid the trouble of typing in the full command
-`*` | user | enter the options for a command in any order |
+`*` | user | enter the options for a command in any order | type in my command more flexibly
 
 ## Appendix B : Sample Use Cases
 
@@ -450,12 +509,12 @@ Use case ends.
 > Use case ends
 
 
-#### <a name = "list"> Use case: Display the active list
+#### <a name = "list"> Use case: Display events and tasks that overlaps/falls within a time slot
 
 **MSS**
 
-1. User requests to list active tasks, active events or both. Additional sort field may be specified.
-2. TaskCrusher displays the (filtered) active list according to the listing options, assigning each item in the list an index.
+1. User specifies a time slot he wants to examine.
+3. TaskCrusher displays the (filtered) active list according to the listing options, assigning each item in the list an index.
 
 Use case ends
 
@@ -470,14 +529,14 @@ Use case ends
 > 2b1. TaskCrusher notifies the user that the active list is currently empty.<br/>
 > Use case ends
 
-#### Use case: Mark a task/event as `done`
+#### Use case: Mark a task/event as `complete`
 
 **MSS**
 
-1. User requests to [display the active list](#list).
+1. User requests to display the active list.
 2. TaskCrusher displays the (filtered) active list.
-3. User uses the index of the task/event of interest to request to mark it as `done`. Multiple indexes can be entered to process more than one item at once.
-4. TaskCrusher moves the item from the active list to the expired list.
+3. User uses the index of the task/event of interest to request to mark it as `complete`.
+4. TaskCrusher marks the item as `complete` and moves the item from the active list to the expired list.
 
 Use case ends
 
@@ -486,39 +545,36 @@ Use case ends
 2a. The task/event is not found in the list
 > Use case ends
 
-2b. User decides not to mark a task/event.
+2b. User decides not to mark the task/event.
 > Use case ends
 
 3a. The index is invalid
 > 3a1. TaskCrusher shows an error message <br>
 Use case resumes at step 2
 <br>
-#### Use case: manage overdue tasks and past events
+
+#### Use case: load a new storage file
 
 **MSS**
 
-1. User requests to [display the active list](#list) with the option to list only overdue tasks and past events relative to the current time.
-2. TaskCrusher displays the filtered list.
-3. For each item in the displayed list, user uses the index to request to mark it as `done`, or dismiss it. Multiple indexes may be entered to process more than one item at once.
-4. TaskCrusher prompts the user to enter the reason for dismissing an item, if the user chose to dismiss an item rather than mark as `done`.
-5. User enters the reason for dismissing a task/event. If user does not wish to do so, user enters nothing and proceeds.
-6. TaskCrusher moves the task/event from the active list to the expired list.
+1. User requests to load a storage file, with the option to create a new one if file does not exist yet.
+2. TaskCrusher stores the current data in the current storage file and load the file specified by the user, and displays its content.
 
 Use case ends
 
 **Extensions**
 
-2a. There are no overdue tasks or past events i.e. the filtered list is empty
+1a. If the user did not specify the file was new, the file does not exist.
+> 1a1. TaskCrusher shows an error message <br>
 > Use case ends
 
-2b. User quits the process
+1b. The file already exists, even if the user specified that the file is new.
+> 1b1. TaskCrusher shows an error message <br>
 > Use case ends
 
-3a. The index is invalid
-> Use case resumes at step 2
-
-4a. The reason is in the wrong format
-> Use case resumes at step 3
+1c. The filename given by the user is invalid.
+> 1c1. TaskCrusher shows an error message <br>
+> Use case ends>
 
 ## Appendix C : Non Functional Requirements
 
@@ -553,7 +609,7 @@ Use case ends
 > When the time slot for a tentative event is finalized, those time slots which had been blocked by that event bu are not part of the finalized time slot become free again for other events to occupy.
 
 #### Active task or event
-> An active task or event is one that is yet to be marked as `completed` or `cannot be done` by the user.
+> An active task or event is one that is yet to be marked as `completed` by the user.
 
 #### Active list
 > The active list contains all the active events and tasks. The active list may contain overdue tasks and past events since it is up to the user to remove them from this list.

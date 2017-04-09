@@ -2,17 +2,15 @@
 
 By : `Team T15B1`  &nbsp;&nbsp;&nbsp;&nbsp; Since: `Feb 2017`  &nbsp;&nbsp;&nbsp;&nbsp; Licence: `MIT`
 
-1. [Introduction](#introduction)
-2. [Quick Start](#quick-start)
-3. [Features](#features)
-4. [Command Summary](#command-summary)
-5. [FAQ](#faq)
-6. [Storage file format](#storage-file-format)
+1. [Introduction](#1-introduction)
+2. [Quick Start](#2-quick-start)
+3. [Features](#3-features)
+4. [Date Formats](#4-date-formats)
+5. [Command Summary](#5-command-summary)
+6. [FAQ](#6-faq)
 
 ## 1. Introduction
-Welcome. We will take you for an enthralling journey as we bring forward our task manager `TaskCrusher`.
-
-It can help you manage events, deadlines, add tasks with or without deadlines or view your history. This is a great manager if you are looking to move away from clicking as the simplified scheduling is just a few short and sweet command lines away.
+TaskCrusher is a task and event manager that combines a GUI with command line-like input for users who want functionality without leaving the keyboard.
 
 ## 2. Quick Start
 
@@ -24,214 +22,332 @@ It can help you manage events, deadlines, add tasks with or without deadlines or
 1. Download the latest `TaskCrusher.jar` from the [releases](../../../releases) tab.
 2. Copy the file to the folder you want to use as the home folder for TaskCrusher.
 3. Double-click the file to start the app. The GUI should appear in a few seconds.
+   > <img src="images/Ui.png" width="600">
+
 4. Type the command in the command box and press <kbd>Enter</kbd> to execute it. <br>
    e.g. typing **`help`** and pressing <kbd>Enter</kbd> will open the help window.
 5. Some example commands you can try:
    * **`help`** : displays help documentation
-   * **`add e`:**  `add e Cs2103 meeting 3 Mar 17:00 to 18:00` adds an event named "Cs2103 meeting" on 3 March from 17:00 to 18:00
-6. Refer to the [Features](#features) section below for details of each command.<br>
+   * **`add t`:**  `add t Cook Omelets p/3 //Make enough for 5` adds a task with no deadline named "Cook Omelets" with priority 3 and description "Make enough for 5"
+6. Refer to the [Features](#3-features) section below for details of each command.<br>
 
 ## 3. Features
 
-> **Command Format**
->
-> * Words in `UPPER_CASE` are the parameters.
-> * Items in `SQUARE_BRACKETS` are optional.
-> * Items surrounding `|` means we only choose one of them (OR).
-> * Items with `...` after them can have multiple instances.
-> * Parameters with a prefix can be entered in any order.
+**Understanding command format:**
+   * Words in `UPPER_CASE` are parameters
+   * Items in `[SQUARE_BRACKETS]` can be omitted. If omitted, they are given a default value.
+   * Force options and prefixed parameters (e.g. `d/` or `p/`) can be entered in any order
 
-### 3.1. Viewing help : `help`
+**Table of parameters:**
 
+| Parameter(s)          | Acceptable formats                       | Default value         |
+|-----------------------|------------------------------------------|-----------------------|
+| Name                  | Alphanumeric characters                  | N/A, can't be omitted |
+| Location, Description | Alphanumeric characters                  | No value              |
+| Tag                   | Alphanumeric characters                  | No value              |
+| Priority              | 0, 1, 2, 3                               | 0                     |
+| List                  | t, e                                     | N/A, can't be omitted |
+| Timeslot              | See [Date Formats](#4-date-formats)      | N/A, can't be omitted |
+| Deadline              | See [Date Formats](#4-date-formats)      | No value              |
+| Index number          | 1 to number of last item on list         | N/A, can't be omitted |
+| Slot number           | 1, 2, 2003                               | N/A, can't be omitted |
+| Filepath              | Acceptable filepath as defined by system | N/A, can't be omitted |
+
+### 3.1. View help
+
+**View help window**:
 Format: `help`
 
-> Help is also shown if you enter an incorrect command e.g. `abcd`
+### 3.2. Add an item
 
-### 3.2. Adding an item: `add e` or `add t`
+Items in TaskCrusher are either tasks or events. <br>
+Tasks and events are distinct: <br>
+   * Tasks are jobs that must be done by a certain date or by an unspecified point in time, and thus may or may not possess a deadline.
+   * Events are commitments that take up a certain time frame and thus must possess a timeslot. 
+   * Users, by default, are prevented from adding events that clash with preexisting events. 
+   * This can be overridden by using the --force option detailed below.
 
-> * DATE format: DD-MM-YY
-> * TIME format: 00:00 (24 hour)
-> * User will be prompted for events that clash
+**Add event**: <br>
+Format: `add e EVENT_NAME [--force] d/TIMESLOT [d/TIMESLOT_2] [p/PRIORITY] [l/LOCATION] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`
+   * If the force option is specified, checking for clashes is disabled.
+   * Although at least one timeslot must be specified, up to three timeslots are supported in order to support tentative events. Timeslots can later be confirmed using the `confirm` command
+   * More than one tag can be specified <br>
+Example: `add e Review Session --force d/today d/tomorrow p/2 l/Auditorium`
 
-**Add event**:
+**Add task**: <br>
+Format: `add t TASK_NAME [d/DEADLINE]  [p/PRIORITY] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`
+   * If a deadline is specified, only one should be specified
+   * More than one tag can be specified <br>
+Example: `add t Cook Omelets p/3 //Make enough for 5`
 
-Format: `add e EVENT_NAME d/START_DATE START_TIME to [END_DATE] END_TIME [t/TAG]... [//DESCRIPTION]`<br>
+### 3.3 List items
 
-**Add tentative event, blocks multiple time slots**:
+Lists are automatically sorted in chronological order. <br>
+Tasks with no deadlines can be found at end of the task list.
 
-Format: `add e EVENT_NAME d/START_DATE START_TIME to [END_DATE] END_TIME or [dt/START_DATE] ... [t/TAG]... [//DESCRIPTION]`<br>
-
-**Add task with deadline**:
-
-Format: `add t TASK_NAME d/DEADLINE [t/TAG] [p/PRIORITY] [//DESCRIPTION]`<br>
-
-**Add task without deadline**:
-
-Format: `add t TASK_NAME [t/TAG] [p/PRIORITY] [//DESCRIPTION] `<br>
-
-Examples:
-
-* `add e CS2103 Meeting d/03-03-17 17:00 to 19:00 t/school`
-* `add t Buy tickets d/03-05-17 //ensure it's front row`
-* `add t Go out for dinner`
-
-### 3.3 Viewing the active/expired list: `list`
-
-**View the entire active list**:
-
+**List all active/incomplete tasks and events**: <br>
 Format: `list`<br>
 
-**View active task list**:
+**List all complete tasks and events**: <br>
+Format: `list complete`<br>
 
-Format: `list t`<br>
+**List all tasks and events, both complete and incomplete**: <br>
+Format: `list all`<br>
 
-**View active event list**:
+**List all tasks and events on or before a given date**: <br>
+Format: `list d/DEADLINE`
+   * Tasks with no deadlines will not appear <br>
+Example: `list d/next Tuesday`
 
-Format: `list e`<br>
+**List all tasks and events that overlap with a given time frame**: <br>
+Format: `list d/TIMESLOT`
+   * Tasks with no deadlines will not appear <br>
+Example: `list d/May 5, 2013 to May 8, 2017`
 
-**View active list within specific time frame**:
+### 3.4 Edit items
 
-> All tasks and events that have times that overlap in part or whole with this time frame will be displayed
+One or more fields of a given item can be edited
+The item is specified by specifying which list to target (task or event) and its index/numbering within that list.
 
-Format: `list d/START_DATE START_TIME to [END_DATE] END_TIME`<br>
+**Edit one or more of an item’s fields**: <br>
+Format: `edit LIST INDEX_NUMBER [prefix_1/NEW_VALUE_1] … [prefix_N/NEW_VALUE_N]`<br>
+Example: `edit t 1 d/tomorrow at noon p/3 //Include footnotes`
 
-**View active task or event list within specific time frame**:
+### 3.5 Mark items as complete/incomplete:
 
-Format: `list [t | e] d/START_DATE START_TIME to [END_DATE] END_TIME`<br>
+The item is specified by specifying which list to target (task or event) and its index/numbering within that list.
 
-**View overdue tasks** :
+**Mark item as complete**:
+Format: `mark LIST INDEX_NUMBER complete`<br>
+Example: `mark t 5 complete`
 
-Format: `list o`<br>
+**Mark item as incomplete**:
+Format: `mark LIST INDEX_NUMBER incomplete`<br>
+Example: `mark e 15 incomplete`
 
-**View tasks and events in the expired list**:
+### 3.6. Switch item type:
 
-Format: `list c`<br>
+Tasks can be switched to become events and vice versa. <br>
+The item is specified by specifying which list to target (task or event) and its index/numbering within that list.
 
-Examples:
+**Switch task to event**: <br>
+Format: `switch t INDEX_NUMBER d/TIMESLOT`
+   * Note that the timeslot cannot be omitted <br>
+Example: `switch t 2 d/today to tomorrow`
 
-* `list c`
-* `list e d/5-5-18 00:00 to 15:00`
-* `list t d/8-7-17 16:00`
+**Switch event to task**: <br>
+Format: `switch e INDEX_NUMBER [d/DEADLINE]`
+   * Events switched to tasks will lose their locations <br>
+Example: `switch e 1`
 
-### 3.4 Updating a field of a task/event in the active list : `edit`
+### 3.7. Confirm timeslots:
 
-> User can edit the fields of the tasks and events in the active list by using their indexes specified in the most recent list. The steps are therefore as follows:
+Events with more than one timeslot are tentative events. <br>
+They can be confirmed by selecting which timeslot to finalize. Timeslots are indexed from 1-3, from left to right.
 
-1. Use `list` command
-2. Using the index, call `edit INDEX etc.`
+**Confirm event timeslot**:<br>
+Format: `confirm e INDEX_NUMBER SLOT_NUMBER` <br>
+Example: `confirm e 14 1`
 
-**Updating the fields**:
+### 3.8. Find items by keywords
 
-> Use the appropriate prefix for the field
+**Find items with fields that match keywords**:<br>
+Format: `find KEYWORD_1 … [KEYWORD_N]`
+   * Name, description and location are searched through
+   * More than one keyword can be specified
+   * Items from both task and event lists displayed <br>
+Example: `find buy 7Eleven`
 
-Format: `edit INDEX [NEW_NAME] prefix/NEW_VALUE [prefix/NEW_VALUE]...`<br>
+### 3.9. Delete an item
 
-Examples:
+The item is specified by specifying which list to target (task or event) and its index/numbering within that list.
 
-`edit 1 Read Harry Potter p/3`, assuming that the item with index 1 is a task.
+**Delete an item**: <br>
+Format: `delete LIST INDEX_NUMBER` <br>
+Example: `delete e 11`
 
-### 3.5 Mark as `done` tasks and events:
+### 3.10. Clear lists
 
-> Just like the `edit` command, the user makes use of the index provided by the `list`-type commands. Either way, the task/event gets stored in the expired list.
+Clears both task and event lists, regardless of whether an item is complete or incomplete
 
-**Marking a task or event as done**:
+**Clear lists**: <br>
+Format: `clear` <br>
 
-Format: `done e | t INDEX`<br>
+### 3.11 Undo last command
 
-Example:
+All commands that modify the data stored can be undone within the same session. <br>
+Specifically, all commands except list, find, help, exit can be undone. <br>
+As many undo commands as there were commands that modified the data may be executed. <br>
+Undone commands may be redone.
 
-`done e 2`
+**Undo last data-modifying command**: <br>
+Format: `undo` <br>
 
-### 3.6. Finding event or task by keyword: `find`
+### 3.12 Redo last undone command
 
-> Finds tasks or events whose field(s) contain any of the given keywords.<br>
+All undone commands may be redone as long as no other data-modifying commands have been executed since the undo. <br>
+After a data-modifying command is executed, any previously undone commands can no longer be redone.
 
-Format: `find KEYWORD [MORE_KEYWORDS]`<br>
+**Redo last undone command**: <br>
+Format: `redo` <br>
 
-Examples:
+### 3.13 Load storage file
 
-* `find cs2103`<br>
-  Returns any task or event pertaining to cs2103
+TaskCrusher can switch between preexisting storage files, and create new storage files.
 
-### 3.7. Deleting a task/event without moving it to the expired list: `delete`
+**Load existing file**: <br>
+Format: `load FILEPATH`<br>
+Example: `load ./preexistingfile.xml`
 
-> Just like edit, user can delete tasks and events in the active list by using their indexes specified in the most recent list. This option can also be used for tasks or events already in the expired list from which the user wants to get rid of.
+**Load new file**: <br>
+Format: `load new FILEPATH`<br>
+   * TaskCrusher creates this file. If file already exists, it will not create a new one. <br>
+Example: `load new ./newfile.xml`
 
-Format: `delete INDEX`<br>
+### 3.14 Exit the program
 
-### 3.8. Clearing all expired tasks and events : `clear`
-
-Format: `clear`<br>
-
-### 3.9 Exiting the program : `exit`
-
+**Exit program**: <br>
 Format: `exit`<br>
 
-### 3.10 Undoing the last command: `undo`
+## 4. Date Formats
 
-Format: `undo`<br>
+   > Warning: not following these date formats may produce erroneous deadlines and timeslots!
 
-### 3.11 Recycle
+Dates are broken down into:
+   * DATE, which defines month, day and year
+   * TIME, which defines time during the given date <br>
+See end of section for valid ways of stating DATE and TIME
 
-Brings back the expired tasks/events back to active list, with the deadline/event date altered. The index is as shown by `list c` command.
+### 4.1 Deadline formats
+DATE TIME
+   * The fully specified format, date and time accepted as given
+DATE
+   * Date is as given, time is inferred to be 11:59pm
+TIME
+   * Date is inferred to be today, time is as given
 
-Format : `recycle INDEX DEADLINE | START_DATE START_TIME to [END_DATE] END_TIME`<br>
+### 4.2 Timeslot formats
+DATE TIME to DATE TIME
+   * The fully specified format, works as intended
+DATE TIME to TIME
+   * End date is inferred to be the same as the start date, times are as given
+DATE to DATE
+   * Start time is inferred to be 12:00am of the start date
+   * End time is inferred to be 11:59pm of the end date
+   * Dates are as given
+TIME to TIME
+   * Start and end dates inferred to be today
+   * Times are as given
 
-### 3.12 Changing storage files : `load`
+### 4.3 Date and Time Formats
+Legend: <br>
+MM - numerical representation of month of the year, e.g. 03 or 3 <br>
+Month - month of the year, spelled out, e.g. March or Mar <br>
+“-” is a separator, “/” can also be used
 
-Format: `load FILEPATH`<br>
+**Acceptable date formats**:
+   * `YYYY-MM-DD`
+   * `MM-DD-YYYY`
+   * `MM-DD-YY`
+   * `MM-DD`
+   * `DD-Month-YY`
+   * `Month DD, YYYY`
+   * `Month DD`
+   * `Today, tomorrow, next week, etc.`
+   * `Monday, Tuesday, Wednesday, etc.`
+   * `noon, midnight, etc.`
 
-> If the file given by FILEPATH does not exist, `TaskCrusher` creates a new file
+**Unacceptable date formats**:
+   * `YYYY Month DD`
+   * `YYYY` (will be interpreted as time)
+   * `J32hdk3ew` (gibberish)
 
-### 3.13 History
+**Time formats**:
+   * `HH:MM` (specify `am` or `pm` if 12 hr time, otherwise 24h)
+   * `HHMM` (colon can be omitted)
 
-**View entire command history for the current session**:
+## 5. Command Summary
 
-> Includes invalid commands
+   * **Help**
+      * Display help
+         * Format: `help`
+   * **Add**
+      * Add event
+         * Format: `add e EVENT_NAME [--force] d/TIMESLOT [d/TIMESLOT_2] [p/PRIORITY] [l/LOCATION] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`
+         * Example: `add e Review Session --force d/today d/tomorrow p/2 l/Auditorium`
+      * Add task
+         * Format: `add t TASK_NAME [d/DEADLINE]  [p/PRIORITY] [//DESCRIPTION] [t/TAG_1] … [t/TAG_N]`
+         * Example: `add t Cook Omelets p/3 //Make enough for 5`
+   * **List**
+      * List only active/incomplete
+         * Format: `list`
+      * List only complete
+         * Format: `list complete`
+      * List all
+         * Format: `list all`
+      * List items until date
+         * Format: `list d/DEADLINE`
+         * Example: `list d/next Tuesday`
+      * List items overlapping time frame
+         * Format: `list d/TIMESLOT`
+         * Example: `list d/May 5, 2013 to May 8, 2017`
+   * **Edit**
+      * Edit one or more of item’s fields
+         * Format: `edit LIST INDEX_NUMBER [prefix_1/NEW_VALUE_1] … [prefix_N/NEW_VALUE_N]`
+         * Example: `edit t 1 d/tomorrow at noon p/3 //Include footnotes`
+   * **Mark**
+      * Mark item complete
+         * Format: `mark LIST INDEX_NUMBER complete
+         * Example: `mark t 5 complete`
+      * Mark item incomplete
+         * Format: `mark LIST INDEX_NUMBER incomplete`
+         * Example: `mark e 15 incomplete`
+   * **Switch**
+      * Switch task to event
+         * Format: `switch t INDEX_NUMBER d/TIMESLOT`
+         * Example: `switch t 2 d/today to tomorrow`
+      * Switch event to task
+         * Format: `switch e INDEX_NUMBER [d/DEADLINE]`
+         * Example: `switch e 1`
+   * **Confirm**
+      * Confirm event timeslot
+         * Format: `confirm e INDEX_NUMBER SLOT_NUMBER`
+         * Example: `confirm e 14 1`
+   * **Find**
+      * Find items by keyword(s)
+         * Format: `find KEYWORD_1 … [KEYWORD_N]`
+         * Example: `find buy 7Eleven`
+   * **Delete**
+      * Delete item
+         * Format: `delete LIST INDEX_NUMBER`
+         * Example: `delete e 11`
+   * **Clear**
+      * Clear lists
+         * Format: `clear`
+   * **Undo**
+      * Undo last data-modifying command
+         * Format: `undo`
+   * **Redo**
+      * Redo last undone command
+         * Format: `redo`
+   * **Load**
+      * Load existing file
+         * Format: `load FILEPATH`
+         * Example: `load ./preexistingfile.xml`
+      * Load new file
+         * Format: `load new FILEPATH`<br>
+         * Example: `load new ./newfile.xml`
+   * **Exit**
+      * Exit program
+         * Format: `exit`
 
-Format: `history`<br>
+## 6. FAQ
 
-## 4. Command Summary
+**Q**: How do I create my own storage file to import into TaskCrusher?<br>
+**A**: Create an .xml file with your data, following the format in the default userInbox.xml file created by TaskCrusher. userInbox.xml is found in the data/ folder
 
-* **Help** : `help`<br>
+**Q**: How do I import my own storage file into TaskCrusher?<br>
+**A**: Use the load command as described above
 
-* **Add event** : `add e event name d/START_DATE START_TIME to [END_DATE] END_TIME [or d/START_DATE...] ... [t/TAG]... [//DESCRIPTION]`<br>
-
-* **Add task** : `add t task name [d/DEADLINE] [t/TAG] [p/PRIORITY] [//DESCRIPTION]`<br>
-
-* **List active tasks/events/all** : `list [t or e] d/START_DATE START_TIME to [END_DATE] END_TIME`<br>
-
-* **List overdue** : `list o`<br>
-
-* **List completed** : `list c`<br>
-
-* **Edit** : `edit INDEX [NEW_NAME] prefix/NEW_VALUE [prefix/NEW_VALUE]...`<br>
-
-* **Done** : `done INDEX`<br>
-
-* **Find** : `find KEYWORD [MORE_KEYWORDS]`<br>
-
-* **Delete** : `delete INDEX`<br>
-
-* **Clear** : `clear`<br>
-
-* **Exit** : `exit`<br>
-
-* **Undo** : `undo`<br>
-
-* **Recycle** : `recycle INDEX DEADLINE | START_DATE START_TIME to [END_DATE] END_TIME`<br>
-
-## 5. FAQ
-
-**Q**: How do I create my own storage file to import into the app?<br>
-**A**: Refer to [Storage file format](#storage-file-format) for instructions
-
-**Q**: How do I import my own storage file into the app?<br>
-**A**: Back up your current storage file as appropriate and overwrite it with the storage file you wish to use.
-
-**Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous TaskCrusher installation.
-
-## 6. Storage File Format
-- User inbox data is stored in `.xml` format
-- User configurations are stored in `.json` format
+**Q**: How do I transfer my data to another computer?<br>
+**A**: Install TaskCrusher on the other computer, copy and load the data file of your previous TaskCrusher installation.

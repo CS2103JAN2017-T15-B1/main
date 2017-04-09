@@ -32,7 +32,7 @@ public class DescriptionTest {
     }
 
     @Test
-    public void constructorInValidDescription() throws Exception {
+    public void constructorInvalidDescription() throws Exception {
         thrown.expect(IllegalValueException.class);
         Description invalidDescription = new Description(" ");
     }

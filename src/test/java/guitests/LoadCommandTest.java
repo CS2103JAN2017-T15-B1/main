@@ -18,6 +18,7 @@ import project.taskcrusher.testutil.TestEventCard;
 import project.taskcrusher.testutil.TestTaskCard;
 import project.taskcrusher.testutil.TypicalTestUserInbox;
 
+//@@author A0127737X
 public class LoadCommandTest extends TaskcrusherGuiTest {
 
     @Rule
@@ -27,6 +28,7 @@ public class LoadCommandTest extends TaskcrusherGuiTest {
 
     @Before
     public void setUp() throws Exception {
+        //make a storage file in testFolder that contains the content of typicalUserInbox
         String filePath = getTempFilePath(EXISTING_FILE);
         FileUtil.createIfMissing(new File(filePath));
         TypicalTestUserInbox testUserInbox = new TypicalTestUserInbox();
@@ -69,7 +71,9 @@ public class LoadCommandTest extends TaskcrusherGuiTest {
     @Test
     public void loadExistingFileSuccess() {
         String filePath = getTempFilePath(EXISTING_FILE);
+        //erase all the data
         commandBox.runCommand("clear");
+        //restore data
         commandBox.runCommand("load " + filePath);
         TestTaskCard[] expectedTasks = new TypicalTestUserInbox().getTypicalTasks();
         Arrays.sort(expectedTasks);

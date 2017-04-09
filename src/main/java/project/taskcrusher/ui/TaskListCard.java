@@ -20,9 +20,9 @@ public class TaskListCard extends UiPart<Region> {
     @FXML
     private HBox cardPane;
     @FXML
-    private Label name;
-    @FXML
     private Label id;
+    @FXML
+    private Label name;
     @FXML
     private Label priority;
     @FXML
@@ -38,49 +38,51 @@ public class TaskListCard extends UiPart<Region> {
 
     public TaskListCard(ReadOnlyTask task, int displayedIndex, boolean isOverdue) {
         super(FXML);
-        showIdAndName(task, displayedIndex);
+        showId(displayedIndex);
+        showName(task);
+        showPriorityIfAny(task);
         showDeadline(task);
-        showPriority(task);
-        showDescription(task);
-        displayCompleteTickIfApplicable(task);
-        displayOverdueStatusIfApplicable(task, isOverdue);
+        showDescriptionIfAny(task);
+        showCompleteTickIfApplicable(task);
+        showOverdueStatusIfApplicable(task, isOverdue);
 
         initTags(task);
     }
 
-    private void showIdAndName(ReadOnlyTask task, int displayedIndex) {
-        name.setText(task.getName().name);
-        name.setMinWidth(Region.USE_PREF_SIZE);
+    private void showId(int displayedIndex) {
         id.setText(displayedIndex + ". ");
     }
 
-    private void displayCompleteTickIfApplicable(ReadOnlyTask task) {
+    private void showName(ReadOnlyTask task) {
+        name.setText(task.getName().name);
+//        name.setMinWidth(Region.USE_PREF_SIZE);
+    }
+
+    private void showCompleteTickIfApplicable(ReadOnlyTask task) {
         if (!task.isComplete()) {
             tickIcon.setVisible(false);
         }
     }
 
-    private void displayOverdueStatusIfApplicable(ReadOnlyTask task, boolean isOverdue) {
+    private void showOverdueStatusIfApplicable(ReadOnlyTask task, boolean isOverdue) {
         if (!task.isComplete() && isOverdue) {
             overdueIcon.setVisible(true);
             overdueIcon.setManaged(true);
-            deadline.setStyle("-fx-text-fill: red"); //should not be done this way
+            deadline.setStyle("-fx-text-fill: red"); //done this way to overwrite the CSS properties
         } else {
             overdueIcon.setVisible(false);
             overdueIcon.setManaged(false);
         }
     }
 
-    private void showDescription(ReadOnlyTask task) {
+    private void showDescriptionIfAny(ReadOnlyTask task) {
         description.setText(task.getDescription().toString()); //still set the text even if empty for GuiTest
-        if (task.getDescription().hasDescription()) {
-            description.setMinWidth(Region.USE_PREF_SIZE);
-        } else {
+        if (!task.getDescription().hasDescription()) {
             description.setVisible(false);;
         }
     }
 
-    private void showPriority(ReadOnlyTask task) {
+    private void showPriorityIfAny(ReadOnlyTask task) {
         priority.setText(UiDisplayUtil.priorityForUi(task.getPriority()));
         switch (task.getPriority().priority) {
         case "1":
@@ -100,7 +102,7 @@ public class TaskListCard extends UiPart<Region> {
     }
 
     private void showDeadline(ReadOnlyTask task) {
-        deadline.setText(UiDisplayUtil.deadlineForUi(task.getDeadline()));
+        deadline.setText(UiDisplayUtil.renderDeadlineAsStringForUi(task.getDeadline()));
         deadline.setMinWidth(Region.USE_PREF_SIZE);
     }
 

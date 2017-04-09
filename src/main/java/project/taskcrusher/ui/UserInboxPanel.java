@@ -30,16 +30,17 @@ public class UserInboxPanel extends UiPart<Region> {
     private static final boolean SET_LIST_VISIBLE = true;
     private static final boolean SET_LIST_HIDDEN = false;
     private static final String MESSAGE_NO_ITEM_TO_SHOW = "Nothing to show!";
-    private Date timer;
+    private Date timer; //used to check events' and tasks' overdue status
 
-    @FXML
-    private ListView<ReadOnlyTask> taskListView;
     @FXML
     private Label taskHeader;
     @FXML
-    private ListView<ReadOnlyEvent> eventListView;
+    private ListView<ReadOnlyTask> taskListView;
     @FXML
     private Label eventHeader;
+    @FXML
+    private ListView<ReadOnlyEvent> eventListView;
+
 
     public UserInboxPanel(AnchorPane userInboxPlaceholder, ObservableList<ReadOnlyTask> taskList,
             ObservableList<ReadOnlyEvent> eventList) {

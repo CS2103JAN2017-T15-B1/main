@@ -25,7 +25,6 @@ public class ListCommand extends Command {
             + "list d/DEADLINE: lists all todos whose set before now to DEADLINE"
             + "list d/TIMESLOT: lists all todos whose timeslot overlaps with TIMESLOT";
 
-    // TODO fix this message eventually
     public static final String MESSAGE_SUCCESS = "Listed all relevant events/tasks";
 
     private Timeslot dateRange;
@@ -67,12 +66,6 @@ public class ListCommand extends Command {
         return new CommandResult(MESSAGE_SUCCESS);
     }
 
-    /**
-     *
-     * @param date
-     * @return
-     * @throws IllegalValueException
-     */
     private Timeslot parseDateRange(String date) throws IllegalValueException {
         Timeslot dateRange;
 

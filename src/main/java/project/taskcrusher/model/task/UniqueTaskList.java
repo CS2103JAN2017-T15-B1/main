@@ -15,7 +15,7 @@ import project.taskcrusher.logic.commands.MarkCommand;
  * At any point in time, {@code internalList} is sorted by the deadline.
  * Supports a minimal set of list operations.
  *
- * @see Task#equals(Object)
+ * @see Task#compareTo(Object)
  * @see CollectionUtil#elementsAreUnique(Collection)
  */
 public class UniqueTaskList implements Iterable<Task> {

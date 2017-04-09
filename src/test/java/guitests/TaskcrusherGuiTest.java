@@ -31,7 +31,7 @@ import project.taskcrusher.testutil.TestUtil;
 import project.taskcrusher.testutil.TypicalTestUserInbox;
 
 /// **
-// * A GUI Test class for AddressBook.
+// * A GUI Test class for Taskcrusher.
 // */
 public abstract class TaskcrusherGuiTest {
 
@@ -109,27 +109,30 @@ public abstract class TaskcrusherGuiTest {
     }
 
     /**
-     * Asserts the person shown in the card is same as the given person
+     * Asserts the task shown in the card is same as the given task
      */
-    public void assertMatching(ReadOnlyTask event, TaskCardHandle card) {
-        assertTrue(TestUtil.compareTaskCardAndTask(card, event));
+    public void assertMatching(ReadOnlyTask task, TaskCardHandle card) {
+        assertTrue(TestUtil.compareTaskCardAndTask(card, task));
     }
 
     /**
-     * Asserts the person shown in the card is same as the given person
+     * Asserts the event shown in the card is same as the given task
      */
     public void assertMatching(ReadOnlyEvent event, EventCardHandle card) {
         assertTrue(TestUtil.compareEventCardAndEvent(card, event));
     }
 
     /**
-     * Asserts the size of the person list is equal to the given number.
+     * Asserts the size of the task list is equal to the given number.
      */
     protected void assertTaskListSize(int size) {
         int numberOfTasks = userInboxPanel.getNumberOfTasks();
         assertEquals(size, numberOfTasks);
     }
 
+    /**
+     * Asserts the size of the event list is equal to the given number.
+     */
     protected void assertEventListSize(int size) {
         int numberOfEvents = userInboxPanel.getNumberOfEvents();
         assertEquals(size, numberOfEvents);

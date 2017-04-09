@@ -21,7 +21,7 @@ public class Task extends UserToDo implements ReadOnlyTask {
     private Deadline deadline;
 
     /**
-     * Modified for Task.
+     * Constructor for Task. {@code isComplete} is initially set to false.
      */
     public Task(Name name, Deadline deadline, Priority priority, Description description, UniqueTagList tags) {
         super(name, priority, description, tags);
@@ -31,7 +31,7 @@ public class Task extends UserToDo implements ReadOnlyTask {
     }
 
     /**
-     * This constructor is used when loading from storage
+     * Overloaded constructor for cases we want to specify {@code isComplete} field.
      */
     public Task(Name name, Deadline deadline, Priority priority, Description description, UniqueTagList tags,
             boolean isComplete) {
@@ -64,6 +64,7 @@ public class Task extends UserToDo implements ReadOnlyTask {
         return this.deadline.hasDeadline();
     }
 
+    @Override
     public boolean isOverdue(Date timer) {
         return hasDeadline() && timer.after(getDeadline().getDate().get());
     }
@@ -79,6 +80,7 @@ public class Task extends UserToDo implements ReadOnlyTask {
         this.setDeadline(replacement.getDeadline());
         this.setDescription(replacement.getDescription());
         this.setTags(replacement.getTags());
+        this.isComplete = replacement.isComplete();
     }
 
     @Override
@@ -100,30 +102,26 @@ public class Task extends UserToDo implements ReadOnlyTask {
 
     @Override
     public int compareTo(ReadOnlyTask another) {
-        if (this.isComplete) {
-            if (another.isComplete()) {
-                return 0;
-            } else {
-                return 1;
-            }
-        } else if (another.isComplete()) {
-            return -1;
-        }
-        //neither is complete
-
-        if (!this.getDeadline().hasDeadline() && !another.getDeadline().hasDeadline()) {
-            return this.getPriority().compareTo(another.getPriority());
-        } else if (!this.getDeadline().hasDeadline() && another.getDeadline().hasDeadline()) {
+        if (this.isComplete && !another.isComplete()) {
             return 1;
-        } else if (this.getDeadline().hasDeadline() && !another.getDeadline().hasDeadline()) {
+        } else if (!this.isComplete && another.isComplete()) {
             return -1;
         } else {
-            //both has deadline
-            Date thisDate = this.getDeadline().getDate().get();
-            assert thisDate != null;
-            Date anotherDate = another.getDeadline().getDate().get();
-            assert anotherDate != null;
-            return thisDate.compareTo(anotherDate);
+            //both are complete, or both are incomplete
+            if (!this.getDeadline().hasDeadline() && !another.getDeadline().hasDeadline()) {
+                return this.getPriority().compareTo(another.getPriority());
+            } else if (!this.getDeadline().hasDeadline() && another.getDeadline().hasDeadline()) {
+                return 1;
+            } else if (this.getDeadline().hasDeadline() && !another.getDeadline().hasDeadline()) {
+                return -1;
+            } else {
+                //both has deadline
+                Date thisDate = this.getDeadline().getDate().get();
+                assert thisDate != null;
+                Date anotherDate = another.getDeadline().getDate().get();
+                assert anotherDate != null;
+                return thisDate.compareTo(anotherDate);
+            }
         }
     }
 

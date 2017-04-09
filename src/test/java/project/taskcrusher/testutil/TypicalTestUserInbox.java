@@ -16,7 +16,8 @@ import project.taskcrusher.model.task.UniqueTaskList;
 //@author A0127737X
 /**
  * Constructs and returns a sample UserInbox instance that can be used for testing.
- * Also provides sample tasks and events that are not added to the UserInbox by default, which can be added later.
+ * Also provides sample tasks and events that are not added to the UserInbox by default, which can be added later
+ * for testing.
  */
 public class TypicalTestUserInbox {
 

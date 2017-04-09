@@ -5,7 +5,7 @@ import project.taskcrusher.model.tag.UniqueTagList;
 
 //@@author A0127737X
 /** Acts as a parent class of Event and Task. Represents a ToDo that user is going to complete
- *  at "some point in time". There is no notion of time introduced at this level.
+ *  at/by "some point in time". There is no notion of time introduced at this level.
  */
 public class UserToDo implements ReadOnlyUserToDo {
     protected Name name;
@@ -14,6 +14,9 @@ public class UserToDo implements ReadOnlyUserToDo {
     protected UniqueTagList tags;
     protected boolean isComplete;
 
+    /**
+     * Creates a UserToDo with complete flag initially set to false.
+     */
     public UserToDo (Name name, Priority priority, Description description, UniqueTagList tags) {
         assert !CollectionUtil.isAnyNull(name, priority, description, tags);
 
