@@ -195,10 +195,19 @@ _Figure 2.3.1 : Structure of the Logic Component_
 
 1. `Logic` uses the `Parser` class to parse the user command.
 2. `Parser` calls the appropriate parser for the identified command, e.g. `AddCommandParser` and `DeleteCommandParser`
-3. The command parser creates the appropriate task or event version of the command, e.g. `AddTaskCommand` and `AddEventCommand`
+3. The command parser creates the appropriate command, e.g. `AddCommand` or `ListCommand`
 4. This `Command` object is executed by the `LogicManager`.
 5. The command execution can affect the `Model` (e.g. editing a task) and/or raise events.
 6. The result of the command execution is encapsulated as a `CommandResult` object which is passed back to the `Ui`.
+
+### 2.3.1 Date Parsing
+- Each individual date given in a command is parsed by `DateUtil`, which relies on ApacheCommons DateUtils and Natty Time Parser in order to produce Java Date objects
+- Specifically, Natty provides nlp for dates, and DateUtils is used for date manipulation. 
+- Both Natty and DateUtils are necessary to construct timeslots where one or more date/time elements are omitted for ease of entry.
+
+### 2.3.2 Task and Event Variants
+- Tasks and events are passed to the same type of command, but the command may call different model methods when executed based on whether a task or event is operated on
+- For example, when executed AddCommand() is able to add either a task or a command, but calls addTask() and addEvent(), respectively.
 
 Given below is the Sequence Diagram for interactions within the `Logic` component for the `execute("delete t 1")`
  API call.<br>
