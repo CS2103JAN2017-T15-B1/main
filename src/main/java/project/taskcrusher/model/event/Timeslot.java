@@ -35,7 +35,7 @@ public class Timeslot implements Comparable<Timeslot> {
     private Timeslot(String end) throws IllegalValueException {
         assert end != null;
 
-        this.start = new Date();
+        this.start = new Date(0);
         this.end = DateUtil.parseDate(end);
 
         if (!isValidTimeslot(this.start, this.end)) {
@@ -91,20 +91,6 @@ public class Timeslot implements Comparable<Timeslot> {
         }
     }
 
-    // REMOVED FOR PAST DATES
-    // public Timeslot(String start, String end, boolean isNew) throws
-    // IllegalValueException {
-    // assert start != null;
-    // assert end != null;
-    //
-    // this.start = DateUtilApache.parseDate(start, isNew);
-    // this.end = DateUtilApache.parseDate(end, isNew);
-    //
-    // if (!isValidTimeslot(this.start, this.end, isNew)) {
-    // throw new IllegalValueException(MESSAGE_TIMESLOT_RANGE);
-    // }
-    // }
-
     /**
      * Checks if {@code another} has overlapping timeslot with this Timeslot
      * object.
@@ -136,17 +122,6 @@ public class Timeslot implements Comparable<Timeslot> {
             return false;
         }
     }
-
-    // private boolean isValidTimeslot(Date start, Date end, boolean isNew) {
-    //
-    // if (!isNew) {
-    // return true;
-    // } else if (!end.before(start)) {
-    // return true;
-    // } else {
-    // return false;
-    // }
-    // }
 
     @Override
     public String toString() {
