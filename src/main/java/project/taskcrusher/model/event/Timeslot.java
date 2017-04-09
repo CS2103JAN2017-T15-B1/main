@@ -64,6 +64,16 @@ public class Timeslot implements Comparable<Timeslot> {
             this.end = DateUtils.setMinutes(this.end, 59);
             this.end = DateUtils.setSeconds(this.end, 59);
             this.end = DateUtils.setMilliseconds(this.end, 59);
+            // handle "today to tomorrow", etc.
+        } else if (startInfo.isTimeInferred() && endInfo.isTimeInferred()) {
+            this.start = DateUtils.setHours(this.start, 0);
+            this.start = DateUtils.setMinutes(this.start, 0);
+            this.start = DateUtils.setSeconds(this.start, 0);
+            this.start = DateUtils.setMilliseconds(this.start, 0);
+            this.end = DateUtils.setHours(this.end, 23);
+            this.end = DateUtils.setMinutes(this.end, 59);
+            this.end = DateUtils.setSeconds(this.end, 59);
+            this.end = DateUtils.setMilliseconds(this.end, 59);
             // handle date omission after "to"
         } else if (endInfo.isDateInferred()) {
             Date tempDate = (Date) this.start.clone();
