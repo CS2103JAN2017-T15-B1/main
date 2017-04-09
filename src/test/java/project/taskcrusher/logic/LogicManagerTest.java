@@ -339,16 +339,19 @@ public class LogicManagerTest {
 
     @Test
     public void execute_confirm_slotIndexNotFound() throws Exception {
-        execute_add_successful();
+        TestDataHelper helper = new TestDataHelper();
+        helper.setupModelUserInbox();
+
         assertCommandFailure("confirm e 2 3", MESSAGE_INVALID_EVENT_SLOT_DISPLAYED_INDEX);
     }
 
     @Test
     public void execute_confirm_successful() throws Exception {
-        execute_add_successful();
+        TestDataHelper helper = new TestDataHelper();
+        helper.setupModelUserInbox();
 
         UserInbox expectedInbox = new UserInbox();
-        TestDataHelper helper = new TestDataHelper();
+
         Task toBeAdded = helper.homework();
         expectedInbox.addTask(toBeAdded);
         Event toBeAdded2 = helper.reviewSession();
@@ -463,10 +466,10 @@ public class LogicManagerTest {
     @Test
     public void execute_editTask_successful() throws Exception {
         // set up
-        execute_add_successful();
+        TestDataHelper helper = new TestDataHelper();
+        helper.setupModelUserInbox();
 
         // create identical userInbox, except for first event
-        TestDataHelper helper = new TestDataHelper();
         List<ReadOnlyEvent> preexistingEvents = model.getUserInbox().getEventList();
         List<ReadOnlyTask> preexistingTasks = model.getUserInbox().getTaskList();
 
@@ -501,10 +504,10 @@ public class LogicManagerTest {
     @Test
     public void execute_editEvent_successful() throws Exception {
         // set up
-        execute_add_successful();
+        TestDataHelper helper = new TestDataHelper();
+        helper.setupModelUserInbox();
 
         // create identical userInbox, except for first event
-        TestDataHelper helper = new TestDataHelper();
         List<ReadOnlyEvent> preexistingEvents = model.getUserInbox().getEventList();
         List<ReadOnlyTask> preexistingTasks = model.getUserInbox().getTaskList();
 
@@ -543,7 +546,8 @@ public class LogicManagerTest {
 
     @Test
     public void execute_edit_invalidArgs() throws Exception {
-        execute_add_successful();
+        TestDataHelper helper = new TestDataHelper();
+        helper.setupModelUserInbox();
 
         assertCommandFailure("edit", String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE));
         assertCommandFailure("edit t 1", EditCommand.MESSAGE_NOT_EDITED);
@@ -571,10 +575,10 @@ public class LogicManagerTest {
     @Test
     public void execute_list_filtersCorrectly() throws Exception {
         // set up model
-        execute_add_successful();
+        TestDataHelper helper = new TestDataHelper();
+        helper.setupModelUserInbox();
 
         // add a task with deadline to use for test
-        TestDataHelper helper = new TestDataHelper();
         model.addTask(helper.homeworkWithDeadline());
 
         // set up expected user inbox (won't change even if filtered lists
@@ -1029,6 +1033,20 @@ public class LogicManagerTest {
         }
 
         /**
+         * Sets up preset UserInbox
+         */
+        void setupModelUserInbox() throws Exception {
+            Task toBeAdded = homework();
+            model.addTask(toBeAdded);
+
+            Event toBeAdded2 = reviewSession();
+            model.addEvent(toBeAdded2);
+
+            Event toBeAdded3 = reviewSessionTentative();
+            model.addEvent(toBeAdded3);
+        }
+
+        /**
          * Adds auto-generated Task objects to the given UserInbox
          *
          * @param userInbox
@@ -1117,5 +1135,6 @@ public class LogicManagerTest {
             return new Event(new Name(name), timeslots, new Priority("0"), new Location("somewhere"),
                     new Description("sample description"), new UniqueTagList(new Tag("tag")));
         }
+
     }
 }

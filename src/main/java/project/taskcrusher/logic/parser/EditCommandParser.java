@@ -55,17 +55,13 @@ public class EditCommandParser {
                 }
 
                 EditTaskDescriptor editTaskDescriptor = new EditTaskDescriptor();
-                try {
-                    editTaskDescriptor.setName(ParserUtil.parseName(preambleFields.get(2)));
-                    editTaskDescriptor.setPriority(ParserUtil.parsePriority(argsTokenizer.getValue(PREFIX_PRIORITY)));
-                    editTaskDescriptor.setDeadline(ParserUtil.parseDeadline(argsTokenizer.getValue(PREFIX_DATE)));
-                    editTaskDescriptor
-                            .setDescription(ParserUtil.parseDescription(argsTokenizer.getValue(PREFIX_DESCRIPTION)));
-                    editTaskDescriptor
-                            .setTags(parseTagsForEdit(ParserUtil.toSet(argsTokenizer.getAllValues(PREFIX_TAG))));
-                } catch (IllegalValueException ive) {
-                    return new IncorrectCommand(ive.getMessage());
-                }
+
+                editTaskDescriptor.setName(ParserUtil.parseName(preambleFields.get(2)));
+                editTaskDescriptor.setPriority(ParserUtil.parsePriority(argsTokenizer.getValue(PREFIX_PRIORITY)));
+                editTaskDescriptor.setDeadline(ParserUtil.parseDeadline(argsTokenizer.getValue(PREFIX_DATE)));
+                editTaskDescriptor
+                        .setDescription(ParserUtil.parseDescription(argsTokenizer.getValue(PREFIX_DESCRIPTION)));
+                editTaskDescriptor.setTags(parseTagsForEdit(ParserUtil.toSet(argsTokenizer.getAllValues(PREFIX_TAG))));
 
                 if (!editTaskDescriptor.isAnyFieldEdited()) {
                     return new IncorrectCommand(EditCommand.MESSAGE_NOT_EDITED);
@@ -82,18 +78,14 @@ public class EditCommandParser {
                 }
 
                 EditEventDescriptor editEventDescriptor = new EditEventDescriptor();
-                try {
-                    editEventDescriptor.setName(ParserUtil.parseName(preambleFields.get(2)));
-                    editEventDescriptor.setLocation(ParserUtil.parseLocation(argsTokenizer.getValue(PREFIX_LOCATION)));
-                    editEventDescriptor.setPriority(ParserUtil.parsePriority(argsTokenizer.getValue(PREFIX_PRIORITY)));
-                    editEventDescriptor.setTimeslots(ParserUtil.parseTimeslots(argsTokenizer.getValue(PREFIX_DATE)));
-                    editEventDescriptor
-                            .setDescription(ParserUtil.parseDescription(argsTokenizer.getValue(PREFIX_DESCRIPTION)));
-                    editEventDescriptor
-                            .setTags(parseTagsForEdit(ParserUtil.toSet(argsTokenizer.getAllValues(PREFIX_TAG))));
-                } catch (IllegalValueException ive) {
-                    return new IncorrectCommand(ive.getMessage());
-                }
+
+                editEventDescriptor.setName(ParserUtil.parseName(preambleFields.get(2)));
+                editEventDescriptor.setLocation(ParserUtil.parseLocation(argsTokenizer.getValue(PREFIX_LOCATION)));
+                editEventDescriptor.setPriority(ParserUtil.parsePriority(argsTokenizer.getValue(PREFIX_PRIORITY)));
+                editEventDescriptor.setTimeslots(ParserUtil.parseTimeslots(argsTokenizer.getValue(PREFIX_DATE)));
+                editEventDescriptor
+                        .setDescription(ParserUtil.parseDescription(argsTokenizer.getValue(PREFIX_DESCRIPTION)));
+                editEventDescriptor.setTags(parseTagsForEdit(ParserUtil.toSet(argsTokenizer.getAllValues(PREFIX_TAG))));
 
                 if (!editEventDescriptor.isAnyFieldEdited()) {
                     return new IncorrectCommand(EditCommand.MESSAGE_NOT_EDITED);
