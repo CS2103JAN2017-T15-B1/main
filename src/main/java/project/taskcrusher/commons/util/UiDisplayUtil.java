@@ -16,8 +16,8 @@ import project.taskcrusher.model.task.Deadline;
  * for better UI.
  */
 public class UiDisplayUtil {
-    public static final String[] PARSE_PATTERNS = { "EEEE MMM dd yyyy hh:mma", "EEEE hh:mma",
-        "EEEE MMM dd hh:mma", "hh:mma" };
+    public static final String[] PARSE_PATTERNS = { "MMM dd yyyy hh:mma", "EEEE hh:mma",
+        "MMM dd hh:mma", "hh:mma" };
     public static final int FORMAT_DATE_ABSOLUTE = 0;
     public static final int FORMAT_DATE_THIS_WEEK = 1;
     public static final int FORMAT_DATE_THIS_YEAR = 2;
