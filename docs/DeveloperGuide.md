@@ -75,6 +75,18 @@ By : `Team T15B1`  &nbsp;&nbsp;&nbsp;&nbsp; Since: `Feb 2017`  &nbsp;&nbsp;&nbsp
 
 ## 2. Design
 
+### 2.0. Terminology
+
+Author: Yoshi Nishimura
+
+Term | Definition
+---------------| :--------------------------------------------------------------------
+Event | An event is a type of to-do that is bound to specific time slot and location
+Active Event | An active event is an event that is yet to be marked as complete by the user
+Task | A task is a type of to-do that is to be done by a deadline, which may or may not be specified
+Active Task | An active task is a task that is yet to be marked as complete by the user
+User inbox | The user inbox contains lists of all the events and all the tasks
+
 ### 2.1. Architecture
 
 <img src="images/Architecture.png" width="600"><br>
@@ -159,9 +171,14 @@ The `UI` component,
 * Binds itself to some data in the `Model` so that the UI can auto-update when data in the `Model` change.
 * Responds to events raised from various parts of the App and updates the UI accordingly. For example, when the user has made changes to the underlying `Model` data by deleting a task, the `statusBar` will update its `syncStatus` field through `UserInboxChangedEvent`.
 
-**The `UserInboxPanel`:**
+#### 2.2.1 `UserInboxPanel`
 - contains two `ListView`s, namely, `taskList` and `eventList`.
-- The visibility of these two lists will be altered according to the command entered. For example, if the user wants to list tasks whose deadlines are set before next Monday, he would type in `list t d/next Monday`. This command would set the visibility of `eventList` to hidden so that the user can use the entire window to list the tasks he/she is interested in. This is accomplished by the `Model` posting `taskListToShowUpdatedEvent` and `eventListShowUpdatedEvent` and the `UserInboxPanel` listening to these events to determine whether the filtered lists are empty or not.
+- The visibility of these two lists will be altered according to the command entered. More specifically, when the lists are filtered following a user command, say `find assignment`, if none of the active events match the keyword `assignment`, the visibility of `eventList` shall be set to `false` and thus be hidden from the UI. This is accomplished by `Model` raising `filteredListsUpdatedEvent`, which contains information about the number of tasks and number of events to be listed.`UserInboxPanel` listens to and handles this event to determine whether the filtered lists are empty or not and thus to adjust the visibility accordingly.
+
+#### 2.2.2 Display of overdue status
+- `UserInboxPanel` has a `Date` object which is used as a timer to check against the deadlines and time slots of active tasks and events. 
+- More specifically, the constructors of both `TaskListCard` and `EventListCard` takes in a boolean field `isOverdue` which indicates whether or not this active task or event should display the overdue status. This boolean value is computed using `isOverdue(Date timer)` method of `Task` and `Event` class, where the argument `timer` belongs to `UserInboxPanel`.
+- This timer is updated through `handleTimerToUpdateEvent()` method, where the `TimerToUpdateEvent` is raised by `CommandBox` whenever the user enters a command. This approach reduces the direct coupling between the UI components, and makes sure that the status of tasks and events shown to the user is as accurate as possible.
 
 ### 2.3. Logic component
 
@@ -189,36 +206,43 @@ _Figure 2.3.1 : Interactions Inside the Logic Component for the `delete t 1` Com
 Author: Yoshi Nishimura
 
 <img src="images/ModelClassDiagram.png" width="800"><br>
-_Figure 2.4.1.1 : Structure of the Model Component1/2_
-
-<br><img src="images/ModelClassDiagram2.png" width="800"><br>
-_Figure 2.4.1.2 : Structure of the Model Component2/2_
+_Figure 2.4.1.1 : Structure of the Model Component 1/2_
 
 **API** : [`Model.java`](../src/main/java/project/taskcrusher/model/Model.java)
 
 The `Model`,
 
 * stores a `UserPref` object that represents the user's preferences.
-* stores the User inbox data, including the list of events, list of tasks and list of tags associated with the items in user inbox.
+* stores the user inbox data, including the list of events, list of tasks and list of tags associated with them.
 * exposes a `UnmodifiableObservableList<ReadOnlyTask>` and `UnmodifiableObservableList<ReadOnlyEvent>` that can be 'observed' e.g. the `UserInboxPanel` in UI can be notified of any updates so that the UI automatically updates when the data in the list change.
 * does not depend on any of the other three components.
-* `Task` and `Event` inherits of `UserItem`.
 
-**Task** consists of:
+#### 2.4.1 Relationship between `Task`, `Event` and `UserToDo` classes
+
+<br><img src="images/ModelClassDiagram2.png" width="800"><br>
+_Figure 2.4.1.2 : Structure of the Model Component 2/2_
+
+**UserToDo** is the parent class of `Task` and `Event`, consisting of the following attributes:
 1. Name
-2. Deadline (optional)
-3. Priority: 1, 2, 3 in ascending order (optional. default = 0)
-4. Description (optional)
-5. Zero or more tags
+2. Priority: 1, 2, 3 in increasing importance (optional. default = 0)
+3. Description (optional)
+4. Zero or more tags
 
-**Event** consists of:
-1. Name
-2. One or more Timeslots
-3. Location (optional)
-4. Description (optional)
-5. Zero or more tags
+**Task**, on top of `UserToDo` attributes, consists of:
+1. Deadline (optional)
 
-**Note**: the reason why although some elements are optional but are still tied as composition is that when they are not supplied by the user, the `Model` would set their values to default values (e.g. empty string).
+**Event**, on top of `UserToDo` attributes, consists of:
+1. One or more time slots
+2. Location (optional)
+
+**Note**: the reason why although some elements are optional but are still tied as composition is that when they are not supplied by the user, the `Model` would set their values to default values (e.g. empty string for `Description`).
+
+#### 2.4.2 Alternative design for `Event` and `Task`
+- Alternative design for modeling tasks with/without deadlines and events with time slots would have been to have one generic `Task` class that can act either as an event or a task. This class may consist of:
+
+1. zero or more time slots
+2. zero or one deadline
+3. zero or one location
 
 ### 2.5. Storage component
 
@@ -238,6 +262,35 @@ The `Storage` component,
 ### 2.6. Common classes
 
 Classes used by multiple components are in the `project.taskcrusher.commons` package.
+
+### 2.7 Sample sequence diagrams
+
+In this section, we demonstrate how the components work together in more detail by illustrating sequence diagrams.
+
+#### 2.7.1 Mark complete command
+Author: Yoshi Nishimura
+
+<img src="images/SDmarkTaskComplete.png" width="900"><br>
+_Figure 2.7.1 : Sequence Diagram for mark task complete_
+
+**Explanation:**
+
+1. When the user enters a command to `CommandBox` in `UI`, it raises `TimerToUpdateEvent` so that `UserInboxPanel` can be notified to update its timer before it renders the filtering of tasks and events, and  thus show appropriate feedback for overdue events and tasks. `TimerToUpdateEvent` is raised for ANY command: this is just one example.
+2. In `saveUserInboxStateForUndo()`, a copy of the current state of user inbox is pushed into `undoStack` so that user can recover to the state before the task was marked.
+3. Since `isComplete` status is saved in hard disk for all events and tasks, `userInboxChangedEvent` is raised by `Model` for `Storage` to handle and save the state of UserInbox.
+4. After `updateFilteredListsToShowAll()` is called, `Model` raises `filteredListsUpdatedEvent` which holds two `int` fields representing the sizes of the filtered task list and event list. This is handled by `UserInboxPanel` in `UI`, which retrieves and displays the two numbers at the top of the lists; if any of them are 0, that list would be hidden.
+5. This sequence of interactions is very similar for the rest of the commands that modifies the content in the user inbox, including add, edit, delete, switch, and of course, mark incomplete.
+**Note:**: `Storage` class is intentionally omitted from the diagram for simplicity. As explained previously in [Events driven nature of the design](#Events-Driven-nature-of-the-design)
+
+### 2.8. Activity Diagram
+Author: Yoshi Nishimura
+
+The following activity diagram summarises all the possible actions the user may conduct with TaskCrusher.
+
+**Note**: In the diagram, more-detailed actions, such as confirm event time slots are generalized and omitted.
+
+<img src="images/ActivityDiagram.png" width="900"><br>
+_Figure 2.8.1 : Activity Diagram_
 
 ## 3. Implementation
 
@@ -264,7 +317,6 @@ and logging destinations.
 
 Certain properties of the application can be controlled (e.g App name, logging level) through the configuration file
 (default: `config.json`):
-
 
 ## 4. Testing
 

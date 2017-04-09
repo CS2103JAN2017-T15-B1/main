@@ -321,7 +321,7 @@ public class ModelManager extends ComponentManager implements Model {
 
     /**
      * Checks if {@code item} contains any of the keywords as substring in its name, description,
-     * tags (and location if {@code instanceof Event}).
+     * tags (and location if {@code item instanceof Event}).
      */
     private class KeywordQualifier implements Qualifier {
         private Set<String> keyWords;
