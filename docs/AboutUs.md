@@ -20,8 +20,8 @@ We are a team based in the [School of Computing, National University of Singapor
 
 #### [Anshul Aggarwal](http://github.com/aanshul20)
 <img src="images/aanshul20.jpg" width="150"><br>
-**Role**: Developer, in charge of Storage <br>
-**Responsibilities**: Testing
+**Role**: Developer <br>
+**Responsibilities**: Undo,Redo and Mark Commands. Testing of Mark,Undo and Redo Commands and their documentation.
 
 -----
 
