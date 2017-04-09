@@ -255,6 +255,7 @@ Month - month of the year, spelled out, e.g. March or Mar <br>
    * `Month DD`
    * `Today, tomorrow, next week, etc.`
    * `Monday, Tuesday, Wednesday, etc.`
+   * `noon, midnight, etc.`
 
 **Unacceptable date formats**:
    * `YYYY Month DD`
