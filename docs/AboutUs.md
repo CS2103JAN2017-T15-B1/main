@@ -13,7 +13,7 @@ We are a team based in the [School of Computing, National University of Singapor
 * **Aspects/tools in charge of**: Documentation, Deliverables and deadlines, Scheduling and tracking, Testing, Travis, Git, Javafx
 * **Features implemented**:
 
-Within Model:
+Within Model and Storage:
    * [Add tasks and events](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/UserGuide.md#32-add-an-item)
    * [Delete tasks and events](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/UserGuide.md#39-delete-an-item)
    * [Edit tasks and events](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/UserGuide.md#34-edit-items)
@@ -23,7 +23,7 @@ Within Model:
    * [Switch between tasks and events](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/UserGuide.md#36-switch-item-type)
    * [mark tasks and events](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/UserGuide.md#35-mark-items-as-completeincomplete)
 
-Fully:
+Fully across all components:
    * [Load storage file](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/docs/UserGuide.md#313-load-storage-file)
 
 * Code written: [functional code](https://github.com/CS2103JAN2017-T15-B1/main/blob/master/collated/main/A0127737X.md), [test code](../collated/test/A0127737X.md)
