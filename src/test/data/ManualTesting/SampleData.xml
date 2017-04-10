@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <userinbox>
     <tasks>
-        <name>Computer lab</name>
-        <priority>3</priority>
-        <description>C OOP</description>
-        <isComplete>false</isComplete>
-        <tagged>school</tagged>
-        <deadline>2016-10-15 12:00AM</deadline>
-    </tasks>
-    <tasks>
         <name>Ask her out for Dinner</name>
         <priority>1</priority>
         <description>Hilton hotel</description>
@@ -25,12 +17,28 @@
         <deadline>2017-03-22 05:00PM</deadline>
     </tasks>
     <tasks>
+        <name>Shopping</name>
+        <priority>1</priority>
+        <description>ikea</description>
+        <isComplete>false</isComplete>
+        <tagged>home</tagged>
+        <deadline>2017-04-10 11:59PM</deadline>
+    </tasks>
+    <tasks>
         <name>Send parcel for birthday gift</name>
         <priority>3</priority>
         <description>Amy's birthday!</description>
         <isComplete>false</isComplete>
         <tagged>family</tagged>
         <deadline>2017-04-10 11:59PM</deadline>
+    </tasks>
+    <tasks>
+        <name>Hostel application</name>
+        <priority>3</priority>
+        <description>submit assignment</description>
+        <isComplete>false</isComplete>
+        <tagged>school</tagged>
+        <deadline>2017-04-11 08:00PM</deadline>
     </tasks>
     <tasks>
         <name>Repair watch</name>
@@ -84,28 +92,12 @@
         <deadline>2017-04-16 11:59PM</deadline>
     </tasks>
     <tasks>
-        <name>Physics hw</name>
-        <priority>3</priority>
-        <description>Kinematics</description>
-        <isComplete>false</isComplete>
-        <tagged>school</tagged>
-        <deadline>2017-04-17 11:59PM</deadline>
-    </tasks>
-    <tasks>
         <name>Chemistry lab</name>
         <priority>3</priority>
         <description>salt analysis</description>
         <isComplete>false</isComplete>
         <tagged>school</tagged>
         <deadline>2017-04-17 11:59PM</deadline>
-    </tasks>
-    <tasks>
-        <name>Watch Harry Potter series</name>
-        <priority>1</priority>
-        <description>compare with the books</description>
-        <isComplete>false</isComplete>
-        <tagged>home</tagged>
-        <deadline>2017-05-01 11:59PM</deadline>
     </tasks>
     <tasks>
         <name>maths project</name>
@@ -116,12 +108,28 @@
         <deadline>2017-05-20 11:59PM</deadline>
     </tasks>
     <tasks>
+        <name>Watch Harry Potter series</name>
+        <priority>1</priority>
+        <description>compare with the books</description>
+        <isComplete>false</isComplete>
+        <tagged>home</tagged>
+        <deadline>2017-05-21 11:59PM</deadline>
+    </tasks>
+    <tasks>
         <name>C assignment</name>
         <priority>1</priority>
         <description>Directory with double pointers</description>
         <isComplete>false</isComplete>
         <tagged>school</tagged>
         <deadline>2017-06-01 01:00PM</deadline>
+    </tasks>
+    <tasks>
+        <name>Physics hw</name>
+        <priority>3</priority>
+        <description>Kinematics</description>
+        <isComplete>false</isComplete>
+        <tagged>school</tagged>
+        <deadline>2017-06-01 03:00PM</deadline>
     </tasks>
     <tasks>
         <name>Physics lab</name>
@@ -140,6 +148,14 @@
         <deadline>2017-06-20 06:00PM</deadline>
     </tasks>
     <tasks>
+        <name>Tennis match</name>
+        <priority>1</priority>
+        <description>With John</description>
+        <isComplete>false</isComplete>
+        <tagged>Home</tagged>
+        <deadline>2017-07-01 10:00AM</deadline>
+    </tasks>
+    <tasks>
         <name>Pick a friend</name>
         <priority>1</priority>
         <description>Mr Smith</description>
@@ -154,6 +170,14 @@
         <isComplete>false</isComplete>
         <tagged>office</tagged>
         <deadline>2017-07-15 11:59PM</deadline>
+    </tasks>
+    <tasks>
+        <name>Invite for dinner</name>
+        <priority>1</priority>
+        <description>Mr XYZ</description>
+        <isComplete>false</isComplete>
+        <tagged>Home</tagged>
+        <deadline>2017-08-10 06:00PM</deadline>
     </tasks>
     <tasks>
         <name>paper checking</name>
@@ -206,10 +230,18 @@
         <deadline>2017-12-11 10:00AM</deadline>
     </tasks>
     <tasks>
+        <name>Computer lab</name>
+        <priority>3</priority>
+        <description>C OOP</description>
+        <isComplete>true</isComplete>
+        <tagged>school</tagged>
+        <deadline>2016-10-15 12:00AM</deadline>
+    </tasks>
+    <tasks>
         <name>Meeting</name>
         <priority>2</priority>
         <description>important person</description>
-        <isComplete>false</isComplete>
+        <isComplete>true</isComplete>
         <tagged>office</tagged>
         <deadline>2017-12-11 02:00PM</deadline>
     </tasks>
@@ -217,49 +249,9 @@
         <name>Buy a phone</name>
         <priority>1</priority>
         <description>gift for friend</description>
-        <isComplete>false</isComplete>
+        <isComplete>true</isComplete>
         <tagged>home</tagged>
         <deadline>2017-12-11 11:59PM</deadline>
-    </tasks>
-    <tasks>
-        <name>Cricket match ticket booking</name>
-        <priority>1</priority>
-        <description>india wc final</description>
-        <isComplete>false</isComplete>
-        <tagged>home</tagged>
-        <deadline>2108-06-21 11:59PM</deadline>
-    </tasks>
-    <tasks>
-        <name>Shopping</name>
-        <priority>1</priority>
-        <description>ikea</description>
-        <isComplete>true</isComplete>
-        <tagged>home</tagged>
-        <deadline>2017-04-10 11:59PM</deadline>
-    </tasks>
-    <tasks>
-        <name>Hostel application</name>
-        <priority>3</priority>
-        <description>submit assignment</description>
-        <isComplete>true</isComplete>
-        <tagged>school</tagged>
-        <deadline>2017-04-11 08:00PM</deadline>
-    </tasks>
-    <tasks>
-        <name>Tennis match</name>
-        <priority>1</priority>
-        <description>With John</description>
-        <isComplete>true</isComplete>
-        <tagged>Home</tagged>
-        <deadline>2017-07-01 10:00AM</deadline>
-    </tasks>
-    <tasks>
-        <name>Invite for dinner</name>
-        <priority>1</priority>
-        <description>Mr XYZ</description>
-        <isComplete>true</isComplete>
-        <tagged>Home</tagged>
-        <deadline>2017-08-10 06:00PM</deadline>
     </tasks>
     <tasks>
         <name>Auditing</name>
@@ -268,6 +260,14 @@
         <isComplete>true</isComplete>
         <tagged>office</tagged>
         <deadline>2017-12-13 10:00AM</deadline>
+    </tasks>
+    <tasks>
+        <name>Cricket match ticket booking</name>
+        <priority>1</priority>
+        <description>india wc final</description>
+        <isComplete>true</isComplete>
+        <tagged>home</tagged>
+        <deadline>2108-06-21 11:59PM</deadline>
     </tasks>
     <events>
         <name>CCA meeting</name>
@@ -473,6 +473,17 @@
             <endDate>2019-11-18 07:00PM</endDate>
         </timeslots>
         <location>Delhi</location>
+    </events>
+    <events>
+        <name>tree planting</name>
+        <priority>0</priority>
+        <description></description>
+        <isComplete>true</isComplete>
+        <timeslots>
+            <startDate>2017-04-09 10:00AM</startDate>
+            <endDate>2017-04-09 11:00AM</endDate>
+        </timeslots>
+        <location></location>
     </events>
     <tags>school</tags>
     <tags>groupwork</tags>
