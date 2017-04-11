@@ -59,20 +59,21 @@ public class TaskListCard extends UiPart<Region> {
             priority.setText("");
         }
     }
-
+    //@@author A0163639W
     private void showDeadline(ReadOnlyTask task) {
         if (task.getDeadline().hasDeadline()) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             deadline.setText(sdf.format(task.getDeadline().getDate().get()));
             //deadline.setText(MESSAGE_DEADLINE_BY + task.getDeadline().toString());
-            //@@author A0163639W
+           
         } else if(task.getDeadline().deadline.equals(COMPLETED_DEADLINE)){
             deadline.setText(COMPLETED_DEADLINE);
-            //@@author A0163639W
+           
         }else {
             deadline.setText(MESSAGE_NO_DEADLINE);
         }
     }
+    //@@author
 
     private void initTags(ReadOnlyTask person) {
         person.getTags().forEach(tag -> tags.getChildren().add(new Label(tag.tagName)));

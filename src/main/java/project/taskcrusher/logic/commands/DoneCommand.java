@@ -10,9 +10,11 @@ import project.taskcrusher.model.task.Task;
 import project.taskcrusher.model.task.UniqueTaskList;
 import project.taskcrusher.model.task.UniqueTaskList.TaskNotFoundException;
 //@@author A0163639W
-/**
- * Deletes a person identified using it's last displayed index from the address book.
+
+/*The team wanted to keep the deadline intact 
+ * so implemented it using different method
  */
+
 public class DoneCommand extends Command {
 
     public static final String COMMAND_WORD = "done";

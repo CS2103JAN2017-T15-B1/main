@@ -19,9 +19,17 @@ import project.taskcrusher.model.task.UniqueTaskList.TaskNotFoundException;
 /**
  * The API of the Model component.
  */
+//@@author A0163639W
 public interface Model {
-	//@@author A0163639W
+
     static ArrayList<Integer> adddel = new ArrayList<Integer>();
+    
+    void deleteUndoTask(ReadOnlyTask target) throws TaskNotFoundException;
+    void addUndoTask(Task task) throws UniqueTaskList.DuplicateTaskException;
+    
+    UnmodifiableObservableList<ReadOnlyTask> getFilteredAddedList();
+    UnmodifiableObservableList<ReadOnlyTask> getFilteredDeletedList();
+    
     //@@author
     /** Clears existing backing model and replaces with the provided new data. */
     void resetData(ReadOnlyUserInbox newData);
@@ -32,17 +40,16 @@ public interface Model {
     //========== for tasks =================================================
     /** Deletes the given task. */
     void deleteTask(ReadOnlyTask target) throws UniqueTaskList.TaskNotFoundException;
-    //@@author A0163639W
-    void deleteUndoTask(ReadOnlyTask target) throws TaskNotFoundException;
+    
+   
    
     /** Done the given task. */
     void doneTask(ReadOnlyTask target) throws UniqueTaskList.TaskNotFoundException;
-//@@author
+
     /** Adds the given task */
     void addTask(Task task) throws UniqueTaskList.DuplicateTaskException;
-    //@@author A0163639W
-    void addUndoTask(Task task) throws UniqueTaskList.DuplicateTaskException;
-//@@author
+    
+
     /**
      * Updates the task located at {@code filteredTaskListIndex} with {@code editedTask}.
      *
@@ -55,10 +62,8 @@ public interface Model {
 
     /** Returns the filtered task list as an {@code UnmodifiableObservableList<ReadOnlyTask>} */
     UnmodifiableObservableList<ReadOnlyTask> getFilteredTaskList();
-    //@@author A0163639W
-    UnmodifiableObservableList<ReadOnlyTask> getFilteredAddedList();
-    UnmodifiableObservableList<ReadOnlyTask> getFilteredDeletedList();
-//@@author
+
+ 
     /** Updates the filter of the filtered task list to show all tasks */
     void updateFilteredTaskListToShowAll();
 

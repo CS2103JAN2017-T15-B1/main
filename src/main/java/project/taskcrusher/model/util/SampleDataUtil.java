@@ -19,7 +19,6 @@ public class SampleDataUtil {
                             new Description("presentation"), new UniqueTagList("school")),
                 new Task(new Name("CS2106 assignment"), new Deadline("next Monday"), new Priority("2"),
                             new Description("submit assignment"), new UniqueTagList("school")),
-                //@@author A0163639W
                 new Task(new Name("security assignment"), new Deadline("next Tuesday"), new Priority("3"),
                         new Description("submit assignment"), new UniqueTagList("school")),
             new Task(new Name("Marketing project"), new Deadline("today"), new Priority("3"),
@@ -107,7 +106,7 @@ public class SampleDataUtil {
                 
          
             };
-            //@@author
+          
         } catch (IllegalValueException e) {
             throw new AssertionError("sample data cannot be invalid", e);
         }

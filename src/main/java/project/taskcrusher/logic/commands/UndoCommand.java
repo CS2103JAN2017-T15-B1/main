@@ -11,6 +11,12 @@ import project.taskcrusher.model.task.UniqueTaskList.DuplicateTaskException;
 /**
  * undo
  */
+
+/* This implementation works well for undo of edit,add and delete commands
+ *  but the number of checks and lines of code increases with more commands like mark
+ *  clear so implemented with easier and shorter method
+ */
+
 public class UndoCommand extends Command {
 
     public static final String COMMAND_WORD = "undo";

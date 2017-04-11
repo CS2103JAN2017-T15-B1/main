@@ -113,10 +113,11 @@ public class UserInbox implements ReadOnlyUserInbox {
      *
      * @throws UniqueTaskList.DuplicateTaskException if an equivalent task already exists.
      */
+    //@@author A0163639W
     public void addTask(Task p) throws UniqueTaskList.DuplicateTaskException {
     	syncMasterTagListWith(p);
         tasks.add(p);
-        //@@author A0163639W
+       
         added.add(p);
     }
     
@@ -124,6 +125,34 @@ public class UserInbox implements ReadOnlyUserInbox {
         syncMasterTagListWith(p);
         tasks.add(p);
         deleted.remove(p);
+    }
+    
+    public boolean removeTask(ReadOnlyTask key) throws UniqueTaskList.TaskNotFoundException, UniqueTaskList.DuplicateTaskException {
+        if (tasks.remove(key)) {
+         
+            deleted.add((Task) key);
+            return true;
+        } else {
+            throw new UniqueTaskList.TaskNotFoundException();
+        }
+    }
+    
+    
+    public boolean removeUndoTask(ReadOnlyTask key) throws UniqueTaskList.TaskNotFoundException, UniqueTaskList.DuplicateTaskException, EventNotFoundException {
+        if (tasks.remove(key)) {
+            added.remove(key);
+            return true;
+        } else {
+            throw new UniqueEventList.EventNotFoundException();
+        }
+    }
+    
+    public ObservableList<ReadOnlyTask> getDeletedList() {
+        return new UnmodifiableObservableList<>(deleted.asObservableList());
+    }
+    
+    public ObservableList<ReadOnlyTask> getAddedList() {
+        return new UnmodifiableObservableList<>(added.asObservableList());
     }
 //@@author
     /**
@@ -255,25 +284,8 @@ public class UserInbox implements ReadOnlyUserInbox {
         }
     }
 
-    public boolean removeTask(ReadOnlyTask key) throws UniqueTaskList.TaskNotFoundException, UniqueTaskList.DuplicateTaskException {
-    	if (tasks.remove(key)) {
-    	    //@@author A0163639W
-        	deleted.add((Task) key);
-            return true;
-        } else {
-            throw new UniqueTaskList.TaskNotFoundException();
-        }
-    }
-    
-    public boolean removeUndoTask(ReadOnlyTask key) throws UniqueTaskList.TaskNotFoundException, UniqueTaskList.DuplicateTaskException, EventNotFoundException {
-        if (tasks.remove(key)) {
-        	added.remove(key);
-            return true;
-        } else {
-            throw new UniqueEventList.EventNotFoundException();
-        }
-    }
-//@@author
+
+  
     public ObservableList<ReadOnlyEvent> getEventsWithOverlappingTimeslots(Timeslot candidate) {
         return events.getEventsWithOverlapingTimeslots(candidate);
     }
@@ -297,15 +309,8 @@ public class UserInbox implements ReadOnlyUserInbox {
     public ObservableList<ReadOnlyTask> getTaskList() {
         return new UnmodifiableObservableList<>(tasks.asObservableList());
     }
-   //@@author A0163639W
-    public ObservableList<ReadOnlyTask> getDeletedList() {
-        return new UnmodifiableObservableList<>(deleted.asObservableList());
-    }
-    
-    public ObservableList<ReadOnlyTask> getAddedList() {
-        return new UnmodifiableObservableList<>(added.asObservableList());
-    }
-//@@author
+   
+   
     @Override
     public ObservableList<ReadOnlyEvent> getEventList() {
         return new UnmodifiableObservableList<>(events.asObservableList());

@@ -91,14 +91,8 @@ public class ModelManager extends ComponentManager implements Model {
 		}
         indicateUserInboxChanged();
     }
-//@@author
-    @Override
-    public synchronized void addTask(Task task) throws UniqueTaskList.DuplicateTaskException {
-        userInbox.addTask(task);
-        updateFilteredTaskListToShowAll();
-        indicateUserInboxChanged();
-    }
- //@@author A0163639W   
+    
+
     public synchronized void addUndoTask(Task task) throws UniqueTaskList.DuplicateTaskException{
         try{userInbox.addUndoTask(task);}
         catch(UniqueTaskList.TaskNotFoundException e){}
@@ -106,7 +100,23 @@ public class ModelManager extends ComponentManager implements Model {
         indicateUserInboxChanged();
     }
     
-   //@@author
+    public UnmodifiableObservableList<ReadOnlyTask> getFilteredAddedList() {
+        return new UnmodifiableObservableList<>(filteredAdded);
+    }
+    
+    public UnmodifiableObservableList<ReadOnlyTask> getFilteredDeletedList() {
+        return new UnmodifiableObservableList<>(filteredDeleted);
+    }
+//@@author
+    @Override
+    public synchronized void addTask(Task task) throws UniqueTaskList.DuplicateTaskException {
+        userInbox.addTask(task);
+        updateFilteredTaskListToShowAll();
+        indicateUserInboxChanged();
+    }
+ 
+    
+  
 
     @Override
     public synchronized void updateTask(int filteredTaskListIndex, ReadOnlyTask editedTask)
@@ -153,15 +163,9 @@ public class ModelManager extends ComponentManager implements Model {
     public UnmodifiableObservableList<ReadOnlyTask> getFilteredTaskList() {
         return new UnmodifiableObservableList<>(filteredTasks);
     }
-    //@@author A0163639W
-    public UnmodifiableObservableList<ReadOnlyTask> getFilteredAddedList() {
-        return new UnmodifiableObservableList<>(filteredAdded);
-    }
     
-    public UnmodifiableObservableList<ReadOnlyTask> getFilteredDeletedList() {
-        return new UnmodifiableObservableList<>(filteredDeleted);
-    }
-//@@author
+  
+
     @Override
     public void updateFilteredTaskListToShowAll() {
         filteredTasks.setPredicate(null);
@@ -314,7 +318,7 @@ public class ModelManager extends ComponentManager implements Model {
             return "user-interested timeslot is " + userInterestedTimeslot.toString();
         }
     }
-    //@@author A0163639W
+
 	@Override
 	public void doneTask(ReadOnlyTask target) throws TaskNotFoundException {
 		
